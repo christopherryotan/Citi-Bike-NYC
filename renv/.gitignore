@@ -1,0 +1,12 @@
+library/
+local/
+cellar/
+lock/
+python/
+sandbox/
+staging/
+.Renviron
+.env
+.env.local
+.env.*
+*.env

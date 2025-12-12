@@ -1,0 +1,25 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  navbar:
+    left:
+      - text: "Citi Bike NYC Analysis"
+        href: index.qmd
+      - text: "SQ2: Temperature & Precipitation"
+        href: sq2.qmd
+    
+  #page-footer:
+    #right:
+    #  - icon: github
+    #    href: https://github.com/christopherryotan/STA9750-2025-FALL
+    #  - icon: linkedin
+    #    href: https://www.linkedin.com/in/christopher-tan-8a9538236/
+
+format:
+  html:
+    theme: default
+    css: styles.css
+    toc: true
+    smooth-scroll: true

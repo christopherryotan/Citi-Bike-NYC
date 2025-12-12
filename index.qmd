@@ -1,0 +1,27 @@
+## Introduction
+
+Bike sharing has become a common part of daily life in large cities, and Manhattan is one of the places where this is most visible. Citi Bike stations are placed throughout the borough and serve thousands of riders each day. People rely on the system for commuting, short errands, recreation, and tourism. Because so many different groups use the bikes, ridership patterns change often and are shaped by many influences.
+
+This project focuses on understanding the main forces behind these changes. We look at time, weather, location, infrastructure, and rider characteristics. Each of these plays a role in how often people ride and where they choose to start their trips. Although many studies have examined biking behavior in cities, there is still value in looking at how these factors interact in a dense and fast-moving setting like Manhattan.
+
+The goal of this report is to explain our findings in a clear and accessible way. This is not a technical document. Instead, it summarizes the most important patterns from our analysis and presents them in a form that a general audience can understand. We highlight the ideas that matter and use visuals to show the main results. The individual reports linked above contain more detail on methods and model outputs.
+
+## Motivation/Context
+
+**OQ: How do weather, time, location, bike lane infrastructure, and rider type affect Citi Bike trip volume in Manhattan?**
+
+Citi Bike is part of everyday transportation in Manhattan. Riders rely on the system for many reasons, and the number of trips changes throughout the day and across the year. Understanding what drives these changes is helpful for several groups. A clearer picture can support planning decisions, guide system operations, and help everyday users set expectations.
+
+The OQ focuses on the combined effect of several important factors. No single factor explains the full story, so the goal is to study each one and then connect them. This helps reveal how the system behaves under different conditions.
+
+Key motivations include:
+
+-   Helping planners understand when and where new bike lanes might have the biggest impact
+
+-   Supporting Citi Bike operations by highlighting predictable rush periods
+
+-   Showing how weather shifts overall demand
+
+-   Giving the public a simple explanation of what shapes availability
+
+-   Combining all factors into one complete and accessible summary
