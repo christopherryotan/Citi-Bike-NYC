@@ -1,0 +1,81 @@
+## Overarching Question (OQ)
+
+**How do weather, time, location, bike lane infrastructure, and rider type affect Citi Bike trip volume in Manhattan?**
+
+Citi Bike is part of everyday transportation in Manhattan. Riders use the system for commuting, short errands, recreation, and tourism. Because of this, ridership changes throughout the day, across seasons, and from one neighborhood to another. Understanding what drives these changes is useful for both planning and daily operations.
+
+The OQ focuses on how several important factors work together to shape Citi Bike demand. No single factor explains the full pattern of ridership on its own. By studying each factor separately and then connecting them, we can better understand how the system behaves under different conditions.
+
+**Key motivations for this question include:**
+
+-   Helping planners understand when and where new bike lanes may have the greatest impact
+-   Supporting Citi Bike operations by identifying predictable rush periods
+-   Showing how weather shifts overall demand levels
+-   Giving the public a clear explanation of what shapes bike availability
+-   Combining multiple influences into one clear and accessible summary
+
+## Specific Questions (SQs)
+
+### SQ1: What are the most popular bike routes and resting stops?
+
+This question identifies where Citi Bike trips most often begin, end, and connect. By examining popular routes and high-traffic stations, we can see how riders move through Manhattan and which locations consistently experience high demand. This provides spatial context for the rest of the analysis.
+
+### SQ2: How do temperature and precipitation affect ridership activity?
+
+Weather influences whether people choose to ride. Warmer temperatures generally encourage biking, while rain tends to reduce trip volume. This SQ isolates the effect of weather to understand how much it shifts overall ridership levels across days and seasons.
+
+### SQ3: How does rider type influence both demand and riding patterns?
+
+Members and casual riders use Citi Bike for different purposes. Members often ride for commuting, while casual riders are more likely to ride for leisure. This SQ helps explain who is driving ridership changes and how usage patterns differ across rider groups.
+
+### SQ4: Is station ridership higher near protected lanes than shared lanes?
+
+Bike lane design may affect where riders feel comfortable starting trips. Protected lanes often provide greater safety than shared lanes. This SQ examines whether stations closer to protected infrastructure experience higher ridership compared to those near shared lanes.
+
+### SQ5: How does time of day and day of week impact overall ridership trends?
+
+Citi Bike usage follows clear daily and weekly cycles. Commute hours create weekday peaks, while weekends show different patterns. This SQ establishes the temporal structure of demand and helps explain when the system is most heavily used.
+
+### SQ6: How does station infrastructure relate to e-bike versus classic bike usage?
+
+Different types of infrastructure may influence the choice between e-bikes and classic bikes. This SQ explores whether proximity to certain lane types or station characteristics is associated with higher e-bike usage compared to classic bikes.
+
+## Engagement with Prior Literature
+
+Prior research on bike-sharing systems consistently shows that infrastructure, environmental conditions, and rider behavior all play important roles in shaping ridership. However, much of the existing literature tends to examine these factors separately or at a broad system level. This project builds on prior work by bringing these elements together and applying them to a focused, station-level analysis within Manhattan.
+
+### Protected Bike Lanes and Ridership (2025)
+
+*Effect of Protected Bike Lanes on Bike-Sharing Ridership*
+
+One recent study, Effect of Protected Bike Lanes on Bike-Sharing Ridership (2025), examines whether protected bike lanes lead to increased Citi Bike usage. Using a causal research design and several years of system-wide data, the authors find that ridership increases after protected lanes are installed. Their results provide strong evidence that safer infrastructure can encourage more people to use bike-share systems. However, the analysis focuses on overall ridership changes rather than how usage varies at individual stations. The study also does not incorporate weather conditions, making it difficult to separate the effects of infrastructure from environmental factors. As a result, while the findings support the importance of protected lanes, they leave open questions about how these effects play out in dense areas like Manhattan at a more detailed spatial level.
+
+### Urban Environment and Visual Context (2024)
+
+*Deciphering Urban Bike-Sharing Patterns*
+
+Another study, Deciphering Urban Bike-Sharing Patterns (2024), takes a different approach by examining how natural environment features and visual street characteristics relate to Citi Bike usage. The authors analyze how factors such as visibility, traffic-related visual elements, and urban form influence ridership patterns. Their results suggest that aspects of the surrounding environment, particularly those associated with motorized traffic, are negatively related to cycling activity. The study provides valuable insight into how the built environment shapes rider behavior, but it does not consider proximity to specific bike-lane types, such as protected versus shared lanes. In addition, the data used predates recent expansions of the Citi Bike network, and the analysis is not limited to Manhattan, which makes it harder to apply the results to the city’s most heavily used bike-share area.
+
+### Weather and Citi Bike Usage (2019)
+
+*Weather and Cycling in New York: The Case of Citi Bike*
+
+Weather effects are explored more directly in Weather and Cycling in New York: The Case of Citi Bike (2019). This study shows that temperature and precipitation have a strong influence on ridership, even after accounting for factors such as land use, infrastructure, and calendar effects. The authors find that weather explains a substantial share of day-to-day variation in Citi Bike usage, often more than infrastructure or location alone. While this study highlights the importance of environmental conditions, it relies on older data from before major system expansions and does not examine how weather interacts with station-level context or lane proximity. As a result, it does not fully capture how weather and infrastructure jointly influence ridership in the current system.
+
+### How This Project Extends Prior Work
+
+Taken together, prior studies show that infrastructure, environmental conditions, and weather all influence bike-share ridership. However, these factors are often examined separately or summarized at a broad, system-wide level. This makes it difficult to understand how they interact at the locations where riders actually make decisions, such as individual stations in dense urban areas.
+
+**This project addresses those gaps by:**
+
+-   **Combining weather, time, rider type, and infrastructure**\
+    Rather than analyzing one factor at a time, this project jointly considers hourly temperature and precipitation, time-of-day and day-of-week patterns, rider type (member versus casual), and proximity to protected versus shared bike lanes. Studying these factors together allows the analysis to capture how they interact, such as how weather conditions may strengthen or weaken the effect of nearby infrastructure.
+
+-   **Focusing on station-level outcomes**\
+    Instead of relying on total system ridership, the analysis measures demand at individual stations. This approach captures meaningful variation across neighborhoods, where some stations experience substantially higher usage than others. Station-level analysis is especially important in Manhattan, where differences in location and infrastructure can lead to large differences in ridership.
+
+-   **Using recent data that reflects current network conditions**\
+    The analysis uses Citi Bike trip data from late 2024 through 2025, reflecting recent system expansion, increased e-bike availability, and updated bike-lane infrastructure. Earlier studies often rely on older data that may not represent current riding behavior, while this project captures how the system operates today.
+
+-   **Isolating Manhattan, where density and infrastructure are most concentrated**\
+    Manhattan contains the highest density of Citi Bike stations, the greatest trip volumes, and a wide mix of protected and shared bike lanes within a compact area. By focusing exclusively on Manhattan, the project reduces noise from lower-density areas and allows for clearer comparisons across stations in a setting where bike-sharing plays a central role in daily transportation.

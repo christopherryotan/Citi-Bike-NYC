@@ -1,0 +1,134 @@
+---
+title: "Effects of Temperature and Precipitation on Bike Ridership"
+format: html
+author: Christopher Tan
+---
+
+## 1. Overview
+
+This report will work to examine how daily weather conditions shape Citi Bike demand in Manhattan, with a focus on the effects of temperature and precipitation on total trip volume. This analysis contributes to the broader project question of how several environmental and behavioral factors jointly determine ridership patterns.
+
+The specific question that I'll be answering is:
+
+> *How do daily temperature and precipitation levels affect Citi Bike trip volume in Manhattan, and to what extent are these effects non-linear?*
+
+## 2. Data Sources & Acquisition
+
+::: callout-note
+**Goal:**\
+Construct a daily, Manhattan-focused panel that links Citi Bike ridership to local weather conditions using fully reproducible data pipelines.
+:::
+
+### 2.1 Data Sources
+
+#### Citi Bike Data
+
+Citi Bike trip data provide near-census coverage of all trips taken on the system during the study period (October 2024 through October 2025). Each trip record includes timestamps, start and end locations, and rider type indicators, allowing trips to be aggregated reliably to the daily level.
+
+#### Open-Meteo API
+
+Daily weather data are obtained from the Open-Meteo archive API and include mean daily temperature and total daily precipitation. Observations are drawn from a central Manhattan location to provide a consistent approximation of weather conditions experienced by riders across the borough.
+
+Weather variables are measured at the daily level to match the temporal resolution of aggregated trip counts.
+
+::: callout-tip
+**Why these data work together**\
+Citi Bike data capture *what* riders do, while weather data capture *the conditions under which those decisions are made*. Linking the two allows us to estimate how short-term conditions translate into changes in demand.
+:::
+
+### 2.2 Data Acquisition Code
+
+All data are acquired programmatically to ensure reproducibility and transparency.
+
+#### Trip data ingestion
+
+Citi Bike trip files are downloaded directly from the official system S3 repository on a month-by-month basis. Downloads are wrapped in retry logic with incremental backoff to guard against transient network failures. Files are retrieved only if they are not already present locally, avoiding unnecessary re-downloads.
+
+Trip files are read using a targeted column selection to reduce memory usage and improve processing speed.
+
+#### Spatial filtering
+
+Manhattan is defined using an official NYC borough boundary shapefile obtained from the NYC Department of City Planning. The geometry is transformed to a standard WGS84 coordinate reference system and used to filter trips via a GIS point-in-polygon operation.
+
+Only trips whose **starting coordinates** fall within the Manhattan boundary are retained. This spatial filtering approach avoids reliance on station naming conventions and ensures consistent geographic classification across all months.
+
+#### Weather data ingestion
+
+Weather data are retrieved via parameterized API requests specifying location, date range, units, and time zone. API responses are validated before being converted into a structured daily dataset containing temperature and precipitation measures.
+
+#### Caching and reuse
+
+All intermediate and final datasets are saved as compressed RDS files. This design allows downstream analyses to load clean, analysis-ready data without repeating download or cleaning steps, ensuring both efficiency and reproducibility across scripts.
+
+::: callout-success
+**Resulting dataset**\
+A clean, spatially accurate, daily panel linking Manhattan-origin Citi Bike trips to local weather conditions, suitable for exploratory analysis and non-linear modeling.
+:::
+
+## 3. Data Cleaning, Preparation & Exploration
+
+::: callout-note
+**Goal of this section:**\
+Prepare a clean, spatially accurate, and analysis-ready dataset that reflects rider decision-making at the start of each Citi Bike trip.
+:::
+
+### 3.1 Cleaning & Preparation
+
+#### Defining the spatial scope
+
+To ensure precise geographic filtering, Manhattan was defined using an official NYC borough boundary shapefile. The geometry was transformed to the WGS84 coordinate reference system to better align with the latitude and longitude values reported in the Citi Bike data.
+
+This GIS-based definition avoids reliance on station names or borough labels, which may be incomplete or inconsistently reported, and instead grounds spatial filtering in geometry.
+
+#### Importing and standardizing trip data
+
+Trip data were downloaded month-by-month and processed using a consistent directory structure to support reproducibility. For each CSV file, only variables required for analysis were imported, reducing memory overhead and keeping the dataset focused.
+
+Trip start and end times were converted to timezone-aware datetime objects using local New York time. From these timestamps, additional temporal variables, such as date and hour, were derived to support daily aggregation and exploratory analysis.
+
+#### Handling missing and invalid records
+
+Trips with missing starting latitude or longitude were excluded prior to spatial filtering, as geographic classification requires valid coordinate information. This step removes records that cannot be reliably assigned to a borough.
+
+#### GIS-based Manhattan filtering
+
+Starting coordinates were converted into spatial point objects and evaluated using a point-in-polygon operation against the Manhattan boundary. Only trips whose **starting location** fell within Manhattan were retained.
+
+::: callout-note
+**Why filter on trip start?**\
+Rider decisions are made at the beginning of a trip. As such, we ultimately decided that restricting our analysis to trips that start in Manhattan reflects demand originating from within the borough, rather than trips that merely pass through or end there.
+:::
+
+#### Dataset consolidation and storage
+
+Cleaned trips were combined across CSV chunks within each month, then concatenated across all months into a single dataset spanning October 2024 through October 2025. The resulting dataset was then saved as a compressed RDS file to enable for fast loading and consistent reuse in subsequent steps.
+
+## 4. Analytical Strategy
+
+Daily trip counts are modeled as a function of weather using Generalized Additive Models (GAMs). Preliminary exploration revealed strong departures from linearity in the relationship between temperature and ridership, motivating the use of flexible smooth terms rather than parametric regression.
+
+GAMs allow the data to determine functional form while maintaining interpretability. Smoothness is constrained to avoid overfitting, and model adequacy is assessed using effective degrees of freedom and deviance explained. This approach balances flexibility with transparency and is well-suited to isolating weather-driven demand effects.
+
+## 5. Results
+
+### 5.1 Main Findings
+
+Temperature exhibits a strong and statistically significant non-linear association with daily trip volume. Ridership increases rapidly as temperatures rise from cold to mild conditions, but marginal gains diminish at higher temperatures, indicating a comfort threshold beyond which additional warmth does not increase demand.
+
+Precipitation reduces ridership in an asymmetric manner. Light rain has limited impact on typical daily usage, while moderate to heavy rainfall leads to substantial declines in trip volume, particularly in the upper tail of the distribution.
+
+### 5.2 Robustness / Validation
+
+## 6. Visualization
+
+## 7. Discussion
+
+### 7.1 Answer
+
+### 7.2 Contribution to the OQ
+
+This weather-focused analysis makes an irreplaceable contribution to the overarching question by separating short-run demand suppression from longer-run structural determinants of ridership. Without explicitly modeling non-linear weather effects, analyses of time-of-day patterns, rider type, or infrastructure risk attributing weather-driven fluctuations to persistent system features. By isolating these effects, this report provides a necessary baseline against which other project components can be interpreted.
+
+## 8. Limitations & Future Work
+
+## 9. Reproducibility Appendix

@@ -1,8 +1,4 @@
-/* ================================
-   Citibank-style layout & text
-   ================================ */
-
-/* --- Fonts & base --- */
+/* Fonts & base */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 html, body {
@@ -20,9 +16,6 @@ html, body {
   padding: 24px 20px 40px 20px;
 }
 
-/* ================================
-   Top “info strip” (optional)
-   ================================ */
 
 /* Use this by wrapping FDIC-type text in a div.top-strip in your qmd */
 .top-strip {
@@ -34,9 +27,7 @@ html, body {
   text-align: left;
 }
 
-/* ================================
-   Headings & body text
-   ================================ */
+/* Headings & body text */
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -75,9 +66,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ================================
-   Navbar – Citibank-style
-   ================================ */
+/* Navbar – Citibank-style */
 
 /* Quarto's navbar wrapper */
 .navbar {
@@ -144,9 +133,7 @@ a:hover {
   }
 }
 
-/* ================================
-   Hero-style button (Apply Now)
-   ================================ */
+/* Hero-style button (Apply Now) */
 
 /* Use class="btn-hero" on links/buttons */
 .btn-hero {
@@ -176,9 +163,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ================================
-   Panels / cards for sections
-   ================================ */
+/* Panels / cards for sections */
 
 .panel {
   background-color: #ffffff;
@@ -188,9 +173,7 @@ a:hover {
   margin-bottom: 1.4rem;
 }
 
-/* ================================
-   Misc: code, tables, hr
-   ================================ */
+/* Misc: code, tables, hr */
 
 pre, code {
   font-family: "Fira Code", "JetBrains Mono", monospace;
