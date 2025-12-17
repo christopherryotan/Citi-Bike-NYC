@@ -7,12 +7,6 @@ website:
     left:
       - text: "Home"
         href: Home.qmd
-      - text: "SQ2: Temperature & Precipitation"
-        href: sq2.qmd
-      - text: "SQ5: Time of Day & Day of Week"
-        href: https://karenn-dotcom.github.io/STA9750-2025-FALL/ind_rep.html
-      - text: "SQ6: E-Bike vs. Classic"
-        href: https://sabrinazhuu.github.io/STA9750-2025-FALL/individual_report.html
         
   #page-footer:
     #right:
