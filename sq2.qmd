@@ -35,6 +35,10 @@ First, we must load the following:
 
 -   `htmltools` for the iFrame embed
 
+-   `gt` for creating clean tables in Quarto
+
+-   `ranger` for fitting fast random forest models
+
 ```{r}
 library(data.table)
 library(sf)
@@ -42,6 +46,8 @@ library(utils)
 library(httr)
 library(jsonlite)
 library(htmltools)
+library(gt)
+library(ranger)
 ```
 
 ### Directories
@@ -471,6 +477,98 @@ daily <- merge(
 )
 ```
 
+### EDA: Summary Check
+
+Before making any plots or models, we must first check that the data looks correct. This step confirms that there is one row per day, that the dates cover the expected time period, and that ridership, temperature, and precipitation values fall within reasonable ranges. Doing this helps ensure that later results are based on real patterns in the data and not on data errors.
+
+```{r}
+cat("Rows (days):", nrow(daily), "\n")
+cat("Date range :", min(daily$date, na.rm = TRUE), "to", max(daily$date, na.rm = TRUE), "\n")
+
+dup_days <- daily[, .N, by = date][N > 1]
+if (nrow(dup_days) > 0) {
+  print(dup_days)
+  stop("EDA check failed: duplicated dates found in daily panel.")
+} else {
+  cat("EDA check: OK — one row per day.\n")
+}
+
+summary(daily[, .(n_trips, temp_mean_F, precip_in)])
+```
+
+-   The dataset contains 396 days with exactly one observation per day, confirming that the daily aggregation is correct
+
+<!-- -->
+
+-   Daily ridership varies widely, from about 13,000 to 130,000 trips, showing that demand changes a lot from day to day
+
+<!-- -->
+
+-   Temperature covers a large range (about 10°F to 94°F) and changes smoothly across the year, suggesting it strongly affects ridership
+
+### EDA: Outlier Check
+
+To check whether very high ridership days are caused by data problems or by real rider behavior, we look at the weather on those highest-demand days.
+
+```{r}
+# Instead of deleting extremes, we inspect whether low/high ridership days align with extreme weather
+low5  <- daily[order(n_trips)][1:5,  .(date, n_trips, temp_mean_F, precip_in)]
+high5 <- daily[order(-n_trips)][1:5, .(date, n_trips, temp_mean_F, precip_in)]
+
+cat("Lowest 5 ridership days:\n");  low5
+cat("\nHighest 5 ridership days:\n"); high5
+
+# Simple rule-of-thumb flags
+daily[, flag_low_trips := n_trips < quantile(n_trips, 0.01, na.rm = TRUE)]
+daily[, flag_high_trips := n_trips > quantile(n_trips, 0.99, na.rm = TRUE)]
+
+daily[flag_low_trips == TRUE,  .(n_days = .N,
+                                 avg_temp = mean(temp_mean_F, na.rm = TRUE),
+                                 avg_prec = mean(precip_in, na.rm = TRUE))] |> print()
+
+daily[flag_high_trips == TRUE, .(n_days = .N,
+                                 avg_temp = mean(temp_mean_F, na.rm = TRUE),
+                                 avg_prec = mean(precip_in, na.rm = TRUE))] |> print()
+```
+
+-   There are 4 extremely high-ridership days in the dataset
+
+<!-- -->
+
+-   These days have an average temperature of about 72°F, which is comfortable for biking
+
+-   Average precipitation is very low (\~0.05 inches), indicating mostly dry conditions
+
+<!-- -->
+
+-   These weather patterns are realistic and favorable, suggesting the high ridership reflects true behavior, not data errors
+
+### EDA: Precipitation Threshold
+
+Before studying how rain affects ridership, we first look at how often each rain level appears in the data given certain thresholds.
+
+```{r}
+# precipitation likely acts via thresholds, not smoothly
+daily[, rain_cat := fifelse(
+  is.na(precip_in), NA_character_,
+  fifelse(precip_in == 0, "None",
+    fifelse(precip_in <= 0.10, "Light",
+      fifelse(precip_in <= 0.30, "Moderate", "Heavy")
+    )
+  )
+)]
+daily[, rain_cat := factor(rain_cat, levels = c("None","Light","Moderate","Heavy"))]
+
+# Distribution of days by category
+daily[, .N, by = rain_cat][order(rain_cat)]
+```
+
+-   "None" accounts for more than half of all days
+
+-   Precipitation's predictive value comes from a small subset of days, not from day-to-day variation
+
+-   Because precipitation only influences ridership on a limited number of days, its overall importance can appear smaller in aggregate models
+
 This saves the final day-level dataset that will be used as input for the graphs/models.
 
 ```{r}
@@ -510,5 +608,217 @@ htmltools::tags$iframe(
   src = "https://citibikenyc.shinyapps.io/appTemp/",
   style = "width:100%; height:900px; border:0;"
 )
-
 ```
+
+## 6. Results
+
+### What the precipitation figure shows
+
+Starting with the rain boxplot, we see that for days with no rain, the median is around 92,000–95,000 trips. On days with light rain, the median is similar or slightly higher, indicating that very small amounts of rain do not meaningfully deter rider. It's also worth noting that there are also far more days without rain than lightly rainy days. As such, light rain days are more likely to coincide with favorable conditions such as warmer temperatures.
+
+The effect becomes clear once rain reaches moderate levels. When precipitation increases from none to moderate, the median daily trip count falls by roughly 10,000 trips, dropping to about 83,000–85,000 trips.
+
+On days with heavy rain, the median drops to roughly 55,000 trips. That means heavy rain is associated with about 40,000 fewer trips in a single day compared to dry conditions.
+
+### What the temperature figure shows
+
+The temperature plot tells the same story in a different way. On cold days (around 20–30°F), daily ridership usually falls between 30,000 and 50,000 trips. As temperatures rise into the 60s and low 70s, daily trips increase to over 105,000–110,000.
+
+That is a swing of more than 60,000 trips per day across the temperature range. The smooth line also shows that ridership stops increasing once temperatures get very hot (above about 75–80°F), leveling off near 100,000 trips. This suggests that warm weather encourages biking up to a comfortable range, but extreme heat does not continue to increase usage.
+
+### Putting temperature and precipitation together
+
+Taken together, the figures show that temperature and precipitation work in different but complementary ways. Temperature determines how high ridership can go, while precipitation determines how far below that level demand falls. On warm, dry days, ridership regularly exceeds 100,000 trips. On cold or rainy days, daily usage can fall to 50,000 trips or less.
+
+::: callout-note
+## Refer to the LOCO table in the group summary report.
+:::
+
+To conclude, weather causes very large swings in daily Citi Bike usage. From the figures, we see that changes in temperature and rain can reduce or increase daily ridership by 10,000 trips on moderate days and by more than 60,000 trips when comparing cold or rainy days to warm, dry ones. No other factor in the analysis causes changes anywhere near this large.
+
+Because weather explains such big day-to-day differences, the model relies heavily on it to make accurate predictions. When we remove weather variables from the model, the model loses this key information. As a result, its predictions become much worse: the average prediction error increases by 2,145 trips per day, and the model’s ability to explain variation in ridership drops by 0.186 in R².
+
+This drop in performance is the largest observed when removing any single factor. In simple terms, once the model no longer knows whether a day is warm, cold, dry, or rainy, it struggles to explain why ridership might be around 100,000 trips on one day but closer to 50,000 trips on another. That is why weather emerges as the most important factor in the LOCO analysis.
+
+## 7. Further Analysis: Temperature vs. Precipitation
+
+To assess their relative impact on weather, we will be applying a leave-one-covariate-out (LOCO) approach that compare the predictive contributions of temperature and precipitation. In this analysis, we start with a model that includes both weather variables (temperature and precipitation), then remove one variable at a time and observe how much the model’s performance changes. If removing a variable causes the model’s accuracy to worsen substantially, that variable is considered more important for predicting daily ridership.
+
+We evaluate model performance using two standard metrics:
+
+-   RMSE (Root Mean Squared Error) measures the typical size of the model’s prediction error, expressed in number of trips per day. A lower RMSE means the model’s predictions are closer to the actual observed ridership.
+
+<!-- -->
+
+-    R² (R-squared) measures how much of the day-to-day variation in Citi Bike ridership the model can explain. Higher R² values indicate that the model captures more of the underlying pattern in the data.
+
+### 1. Load Datasets
+
+We load the processed Manhattan Citi Bike trip data and the daily weather data, then convert both into `data.table` objects for efficient data manipulation. All date fields are standardized to ensure the two datasets can be merged accurately at the daily level.
+
+```{r}
+trips <- readRDS("data/processed/citibike_manhattan_all_202410_202510.rds")
+wx    <- readRDS("data/processed/weather_daily_10036_202410_202510.rds")
+
+setDT(trips)
+setDT(wx)
+
+if (!inherits(trips$started_at, "POSIXct")) {
+  trips[, started_at := as.POSIXct(started_at, tz = "America/New_York")]
+}
+trips[, date := as.Date(started_at)]
+
+wx[, date := as.Date(date)]
+```
+
+### 2. Define the outcome variable
+
+Because weather conditions vary by day, we aggregate trip-level data into a daily outcome variable, **`n_trips`**, which represents the total number of Citi Bike trips taken on each date. This aligns the outcome with the temporal scale of the weather data.
+
+```{r}
+y_daily <- trips[, .(n_trips = .N), by = date]
+setorder(y_daily, date)
+```
+
+### 3. Select weather predictors
+
+From the weather dataset, we retain only two variables:
+
+-   **`temp_mean_F`**: daily average temperature (°F)
+
+-   **`precip_in`**: total daily precipitation (inches)
+
+Limiting predictors to just these two variables makes sure that the analysis focuses exclusively on comparing the effects of temperature and precipitation, without introducing additional confounding factors.
+
+```{r}
+wx_daily <- wx[, .(date, temp_mean_F, precip_in)]
+setkey(wx_daily, date)
+```
+
+### 4. Create the modeling dataset
+
+We merge the daily trip totals with the daily weather variables by date to form a single modeling dataset. Any days with missing values are removed so that all models are trained and evaluated using the same complete set of observations.
+
+```{r}
+dt <- merge(y_daily, wx_daily, by = "date", all.x = TRUE)
+dt <- dt[!is.na(n_trips) & !is.na(temp_mean_F) & !is.na(precip_in)]
+setorder(dt, date)
+```
+
+### 5. Use a train/test split
+
+To prevent information from the future influencing model training, we split the data chronologically. The first 80% of days are used for training, while the remaining 20% are reserved for testing. This time-safe split reflects a realistic forecasting setting.
+
+```{r}
+n   <- nrow(dt)
+cut <- floor(0.8 * n)
+train_dt <- dt[1:cut]
+test_dt  <- dt[(cut+1):n]
+```
+
+### 6. Fit and evaluate models
+
+We define a helper function that fits a **random forest model** using the `ranger` package and evaluates its performance on the test set. Model performance is assessed using two metrics:
+
+```{r}
+score_model <- function(train_dt, test_dt, drop_cols = character()) {
+  x_cols <- setdiff(names(train_dt), c("date","n_trips", drop_cols))
+  
+  fit <- ranger(
+    formula = as.formula(paste("n_trips ~", paste(x_cols, collapse = " + "))),
+    data = train_dt,
+    num.trees = 500,
+    mtry = max(1, floor(sqrt(length(x_cols)))),
+    min.node.size = 10,
+    num.threads = max(1, parallel::detectCores() - 1)
+  )
+  
+  p <- predict(fit, data = test_dt)$predictions
+  rmse <- sqrt(mean((test_dt$n_trips - p)^2))
+  r2   <- 1 - sum((test_dt$n_trips - p)^2) / sum((test_dt$n_trips - mean(test_dt$n_trips))^2)
+  
+  list(rmse = rmse, r2 = r2)
+}
+```
+
+### 7. Baseline model 
+
+We first fit a baseline random forest model that includes both temperature and precipitation. The RMSE and R² from this full model serve as reference benchmarks for evaluating the impact of removing each weather variable in the LOCO analysis.
+
+```{r}
+base <- score_model(train_dt, test_dt, drop_cols = character())
+
+cat("\nFull model (Temp + Precip)\n")
+cat("RMSE:", round(base$rmse, 1), "\n")
+cat("R^2 :", round(base$r2, 3), "\n")
+```
+
+### 8. LOCO: Temperature vs. Precipitation
+
+We apply the leave-one-covariate-out (LOCO) procedure by refitting the model twice:
+
+-    **Remove temperature:** the model is trained using precipitation only.
+
+-   **Remove precipitation:** the model is trained using temperature only
+
+```{r}
+loco <- rbindlist(list(
+  
+  {
+    res <- score_model(train_dt, test_dt, drop_cols = "temp_mean_F")
+    data.table(
+      component   = "Temperature",
+      rmse        = res$rmse,
+      r2          = res$r2
+    )
+  },
+  
+  {
+    res <- score_model(train_dt, test_dt, drop_cols = "precip_in")
+    data.table(
+      component   = "Precipitation",
+      rmse        = res$rmse,
+      r2          = res$r2
+    )
+  }
+  
+), fill = TRUE)
+
+# Compute deltas vs full model
+loco[, `:=`(
+  delta_rmse = rmse - base$rmse,
+  delta_r2   = r2   - base$r2
+)]
+
+setorder(loco, -delta_rmse)
+loco[, rank := frank(-delta_rmse, ties.method = "first")]
+setcolorder(loco, c("rank","component","rmse","r2","delta_rmse","delta_r2"))
+
+print(loco)
+```
+
+### 9. Interpreting the results
+
+```{r}
+loco |>
+  gt() |>
+  cols_label(
+    rank = "Rank",
+    component = "Dropped",
+    rmse = "RMSE (LOCO)",
+    r2 = "R² (LOCO)",
+    delta_rmse = "Δ RMSE vs Full",
+    delta_r2 = "Δ R² vs Full"
+  ) |>
+  fmt_number(columns = c(rmse, delta_rmse), decimals = 0) |>
+  fmt_number(columns = c(r2, delta_r2), decimals = 3) |>
+  tab_header(title = "LOCO Weather Importance: Temperature vs Precipitation")
+```
+
+The LOCO analysis shows that between the two variables, temperature is the stronger predictor of daily Citi Bike ridership compared to precipitation. When temperature is removed from the model, prediction accuracy declines substantially: the typical prediction error increases by roughly 14,000 trips per day, and the model’s R² becomes strongly negative. This indicates that the model without temperature performs much worse than simply predicting the average number of daily trips, highlighting how essential temperature is for capturing day-to-day variation in ridership.
+
+In contrast, removing precipitation also reduces model performance, but to a lesser degree. The increase in prediction error is about 6,300 trips per day, and the drop in R² is smaller than when temperature is removed. This suggests that precipitation provides useful information, particularly for suppressing ridership on rainy days, but it does not explain as much overall variation as temperature.
+
+Some limitations to note are that the effect of precipitation may be understated in this analysis because rainfall is sporadic and short-lived, rather than a consistent condition throughout the day. Aggregating precipitation to the daily level can mask important within-day variation, such as brief rain events that strongly suppress ridership during specific hours but do not persist long enough to substantially affect the daily total.
+
+An hourly analysis would better capture these short-term behavioral responses to rain. However, due to memory and computational constraints associated with processing the full trip-level dataset at an hourly resolution, we default to a daily aggregation. As a result, the LOCO comparison likely favors temperature due to exerting a more persistent, day-long influence, while underrepresenting the true impact of precipitation.
