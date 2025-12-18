@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -90,18 +125,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./Home.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./sq2.html" aria-current="page"> 
-<span class="menu-text">SQ2: Temperature &amp; Precipitation</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://karenn-dotcom.github.io/STA9750-2025-FALL/ind_rep.html"> 
-<span class="menu-text">SQ5: Time of Day &amp; Day of Week</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://sabrinazhuu.github.io/STA9750-2025-FALL/individual_report.html"> 
-<span class="menu-text">SQ6: E-Bike vs.&nbsp;Classic</span></a>
-  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -110,43 +133,12 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1. Overview</a></li>
-  <li><a href="#data-sources-acquisition" id="toc-data-sources-acquisition" class="nav-link" data-scroll-target="#data-sources-acquisition">2. Data Sources &amp; Acquisition</a>
-  <ul class="collapse">
-  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">2.1 Data Sources</a></li>
-  <li><a href="#data-acquisition-code" id="toc-data-acquisition-code" class="nav-link" data-scroll-target="#data-acquisition-code">2.2 Data Acquisition Code</a></li>
-  </ul></li>
-  <li><a href="#data-cleaning-preparation-exploration" id="toc-data-cleaning-preparation-exploration" class="nav-link" data-scroll-target="#data-cleaning-preparation-exploration">3. Data Cleaning, Preparation &amp; Exploration</a>
-  <ul class="collapse">
-  <li><a href="#cleaning-preparation" id="toc-cleaning-preparation" class="nav-link" data-scroll-target="#cleaning-preparation">3.1 Cleaning &amp; Preparation</a></li>
-  </ul></li>
-  <li><a href="#analytical-strategy" id="toc-analytical-strategy" class="nav-link" data-scroll-target="#analytical-strategy">4. Analytical Strategy</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">5. Results</a>
-  <ul class="collapse">
-  <li><a href="#main-findings" id="toc-main-findings" class="nav-link" data-scroll-target="#main-findings">5.1 Main Findings</a></li>
-  <li><a href="#robustness-validation" id="toc-robustness-validation" class="nav-link" data-scroll-target="#robustness-validation">5.2 Robustness / Validation</a></li>
-  </ul></li>
-  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">6. Visualization</a></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">7. Discussion</a>
-  <ul class="collapse">
-  <li><a href="#answer" id="toc-answer" class="nav-link" data-scroll-target="#answer">7.1 Answer</a></li>
-  <li><a href="#contribution-to-the-oq" id="toc-contribution-to-the-oq" class="nav-link" data-scroll-target="#contribution-to-the-oq">7.2 Contribution to the OQ</a></li>
-  </ul></li>
-  <li><a href="#limitations-future-work" id="toc-limitations-future-work" class="nav-link" data-scroll-target="#limitations-future-work">8. Limitations &amp; Future Work</a></li>
-  <li><a href="#reproducibility-appendix" id="toc-reproducibility-appendix" class="nav-link" data-scroll-target="#reproducibility-appendix">9. Reproducibility Appendix</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -155,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -175,171 +167,544 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">1. Overview</h2>
-<p>This report will work to examine how daily weather conditions shape Citi Bike demand in Manhattan, with a focus on the effects of temperature and precipitation on total trip volume. This analysis contributes to the broader project question of how several environmental and behavioral factors jointly determine ridership patterns.</p>
-<p>The specific question that I’ll be answering is:</p>
+<p>Citi Bike demand can change substantially from one day to the next, and weather is one of the most direct reasons why. Unlike long recreational rides, many Citi Bike trips in Manhattan are short, purpose driven trips such as commutes to work, quick errands, or first and last mile connections to the subway. Because these trips are often discretionary at the margin, riders continuously weigh the convenience of biking against comfort and perceived safety.</p>
+<p>Temperature plays a key role in this decision making process. Warmer days generally lower the physical and mental barrier to riding, making biking feel easier and more pleasant, which can lead to higher overall trip volume. In contrast, colder days can discourage riding due to discomfort. Precipitation adds another layer of friction by reducing comfort and increasing safety concerns such as slippery roads and reduced visibility, leading some riders to choose alternative modes of transportation.</p>
+<p>Together, these patterns suggest that daily weather conditions may systematically influence Citi Bike usage. To quantify this relationship and move beyond intuition, this analysis focuses on the following question:</p>
 <blockquote class="blockquote">
-<p><em>How do daily temperature and precipitation levels affect Citi Bike trip volume in Manhattan, and to what extent are these effects non-linear?</em></p>
+<p><em>How do daily temperature and precipitation levels affect Citi Bike trip volume in Manhattan?</em></p>
 </blockquote>
 </section>
-<section id="data-sources-acquisition" class="level2">
-<h2 class="anchored" data-anchor-id="data-sources-acquisition">2. Data Sources &amp; Acquisition</h2>
-<div class="callout callout-style-default callout-note callout-titled">
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">2. Data Preparation</h2>
+<section id="install-packages" class="level3">
+<h3 class="anchored" data-anchor-id="install-packages">Install packages</h3>
+<p>First, we must load the following:</p>
+<ul>
+<li><p><code>data.table</code> for fast CSV reading and big-data manipulation</p></li>
+<li><p><code>sf</code> for spatial operations (point-in-polygon)</p></li>
+<li><p><code>utils</code> for downloads</p></li>
+<li><p><code>httr</code> + <code>jsonlite</code> for calling the weather API and parsing JSON</p></li>
+<li><p><code>htmltools</code> for the iFrame embed</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.13.0, GDAL 3.10.1, PROJ 9.5.1; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(utils)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="directories" class="level3">
+<h3 class="anchored" data-anchor-id="directories">Directories</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="ot">&lt;-</span> <span class="st">"data/raw"</span>          <span class="co"># zipped tripdata</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>out_dir <span class="ot">&lt;-</span> <span class="st">"data/processed"</span>    <span class="co"># cleaned outputs</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>gis_dir <span class="ot">&lt;-</span> <span class="st">"data/gis"</span>          <span class="co"># borough shapefile</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(raw_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(out_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(gis_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="download-settings" class="level3">
+<h3 class="anchored" data-anchor-id="download-settings">Download Settings</h3>
+<p>Two stability tweaks for large downloads:</p>
+<ul>
+<li><p>longer timeout</p></li>
+<li><p><code>libcurl</code> download method</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">download.file.method =</span> <span class="st">"libcurl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="time-window" class="level3">
+<h3 class="anchored" data-anchor-id="time-window">Time Window</h3>
+<p>Define the month labels Citi Bike uses (<code>YYYYMM</code>) and the base URL.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>months <span class="ot">&lt;-</span> <span class="fu">format</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2024-10-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2025-10-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%Y%m"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>base_url <span class="ot">&lt;-</span> <span class="st">"https://s3.amazonaws.com/tripdata"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="download-manhattan-polygon-gis" class="level3">
+<h3 class="anchored" data-anchor-id="download-manhattan-polygon-gis">Download Manhattan Polygon (GIS)</h3>
+<p>We must download NYC borough boundaries, read them as an <code>sf</code> object, convert to standard lat/lon (EPSG:4326), then extract <strong>only Manhattan</strong> as <code>manhattan_poly</code>. That polygon is used later to filter trips.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>borough_url <span class="ot">&lt;-</span> <span class="st">"https://www.nyc.gov/assets/planning/download/zip/data-maps/open-data/nybb_16a.zip"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>borough_zip <span class="ot">&lt;-</span> <span class="fu">file.path</span>(gis_dir, <span class="st">"nyc_boroughs.zip"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(borough_zip)) {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Downloading NYC borough boundaries shapefile..."</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(borough_url, borough_zip, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(borough_zip, <span class="at">exdir =</span> gis_dir)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>shp_file <span class="ot">&lt;-</span> <span class="fu">list.files</span>(gis_dir, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.shp$"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>]</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.na</span>(shp_file)) <span class="fu">stop</span>(<span class="st">"No .shp file found in "</span>, gis_dir, <span class="st">" after unzip."</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>boroughs <span class="ot">&lt;-</span> <span class="fu">st_read</span>(shp_file, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>boroughs <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(boroughs, <span class="dv">4326</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"BoroName"</span> <span class="sc">%in%</span> <span class="fu">names</span>(boroughs))) {</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Could not find a 'BoroName' column in borough shapefile."</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>manhattan_poly <span class="ot">&lt;-</span> boroughs[boroughs<span class="sc">$</span>BoroName <span class="sc">==</span> <span class="st">"Manhattan"</span>, ]</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(manhattan_poly) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">stop</span>(<span class="st">"Manhattan polygon not found in boroughs shapefile."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="download-from-open-meteo" class="level3">
+<h3 class="anchored" data-anchor-id="download-from-open-meteo">Download from Open-Meteo</h3>
+<p>Set location:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># used Midtown as our reference point</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>latitude  <span class="ot">&lt;-</span> <span class="fl">40.75493</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>longitude <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">73.98402</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Query Open-Meteo for daily:</p>
+<ul>
+<li><p>mean temperature (<code>temperature_2m_mean</code>)</p></li>
+<li><p>precipitation sum (<code>precipitation_sum</code>)</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>get_monthly_weather <span class="ot">&lt;-</span> <span class="cf">function</span>(lat, lon, start_date, end_date, <span class="at">max_attempts =</span> <span class="dv">5</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use archive endpoint for past dates (more appropriate for historical pulls)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  base_url <span class="ot">&lt;-</span> <span class="st">"https://api.open-meteo.com/v1/forecast"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">as.Date</span>(start_date) <span class="sc">&lt;</span> <span class="fu">Sys.Date</span>()) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    base_url <span class="ot">&lt;-</span> <span class="st">"https://archive-api.open-meteo.com/v1/archive"</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">latitude           =</span> lat,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">longitude          =</span> lon,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date         =</span> start_date,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_date           =</span> end_date,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">daily              =</span> <span class="st">"temperature_2m_mean,precipitation_sum"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">temperature_unit   =</span> <span class="st">"fahrenheit"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">precipitation_unit =</span> <span class="st">"inch"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">timezone           =</span> <span class="st">"America/New_York"</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (attempt <span class="cf">in</span> <span class="fu">seq_len</span>(max_attempts)) {</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Robust request: longer timeout + safe error handling</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    resp <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">GET</span>(base_url, <span class="at">query =</span> params, <span class="fu">timeout</span>(<span class="dv">60</span>)),</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) e</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If the request failed (DNS/timeout/etc.), retry with backoff</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">inherits</span>(resp, <span class="st">"error"</span>)) {</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"Weather request error (attempt "</span>, attempt, <span class="st">"): "</span>, resp<span class="sc">$</span>message)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(<span class="dv">2</span> <span class="sc">^</span> attempt)</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>      <span class="cf">next</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If server returns non-200, retry (could be temporary)</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">status_code</span>(resp) <span class="sc">!=</span> <span class="dv">200</span>) {</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"Weather request failed (attempt "</span>, attempt, <span class="st">") status: "</span>,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>              <span class="fu">status_code</span>(resp))</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(<span class="dv">2</span> <span class="sc">^</span> attempt)</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>      <span class="cf">next</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Parse JSON</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    dat <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">content</span>(resp, <span class="st">"text"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>))</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If daily data is missing, retry</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(dat<span class="sc">$</span>daily<span class="sc">$</span>time)) {</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"No daily data returned (attempt "</span>, attempt, <span class="st">") for "</span>,</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>              start_date, <span class="st">"–"</span>, end_date)</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(<span class="dv">2</span> <span class="sc">^</span> attempt)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>      <span class="cf">next</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Success: return clean daily table</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(data.table<span class="sc">::</span><span class="fu">data.table</span>(</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">date        =</span> <span class="fu">as.Date</span>(dat<span class="sc">$</span>daily<span class="sc">$</span>time),</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">temp_mean_F =</span> dat<span class="sc">$</span>daily<span class="sc">$</span>temperature_2m_mean,</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">precip_in   =</span> dat<span class="sc">$</span>daily<span class="sc">$</span>precipitation_sum</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Failed to fetch weather after "</span>, max_attempts, <span class="st">" attempts for "</span>,</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>          start_date, <span class="st">"–"</span>, end_date)</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Build a list of month ranges, call the API month-by-month, combine results, and save.</p>
+<ul>
+<li><p><code>Sys.sleep(0.5)</code> is a rate-limit to reduce API stress</p></li>
+<li><p><code>head()</code>/<code>tail()</code> prints are quick checks to make sure that data has properly settled</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>date_ranges <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2024-10-01"</span>, <span class="at">end =</span> <span class="st">"2024-10-31"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2024-11-01"</span>, <span class="at">end =</span> <span class="st">"2024-11-30"</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2024-12-01"</span>, <span class="at">end =</span> <span class="st">"2024-12-31"</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-01-01"</span>, <span class="at">end =</span> <span class="st">"2025-01-31"</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-02-01"</span>, <span class="at">end =</span> <span class="st">"2025-02-28"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-03-01"</span>, <span class="at">end =</span> <span class="st">"2025-03-31"</span>),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-04-01"</span>, <span class="at">end =</span> <span class="st">"2025-04-30"</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-05-01"</span>, <span class="at">end =</span> <span class="st">"2025-05-31"</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-06-01"</span>, <span class="at">end =</span> <span class="st">"2025-06-30"</span>),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-07-01"</span>, <span class="at">end =</span> <span class="st">"2025-07-31"</span>),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-08-01"</span>, <span class="at">end =</span> <span class="st">"2025-08-31"</span>),</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-09-01"</span>, <span class="at">end =</span> <span class="st">"2025-09-30"</span>),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">start =</span> <span class="st">"2025-10-01"</span>, <span class="at">end =</span> <span class="st">"2025-10-31"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Getting daily weather data for Manhattan</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Getting daily weather data for Manhattan</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>weather_list <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="fu">length</span>(date_ranges))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(date_ranges)) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  dr <span class="ot">&lt;-</span> date_ranges[[i]]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"  "</span>, dr<span class="sc">$</span>start, <span class="st">"–"</span>, dr<span class="sc">$</span>end, <span class="st">"...</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  weather_list[[i]] <span class="ot">&lt;-</span> <span class="fu">get_monthly_weather</span>(latitude, longitude, dr<span class="sc">$</span>start, dr<span class="sc">$</span>end)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="fl">0.5</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   2024-10-01 – 2024-10-31 ...
+   2024-11-01 – 2024-11-30 ...
+   2024-12-01 – 2024-12-31 ...
+   2025-01-01 – 2025-01-31 ...
+   2025-02-01 – 2025-02-28 ...
+   2025-03-01 – 2025-03-31 ...
+   2025-04-01 – 2025-04-30 ...
+   2025-05-01 – 2025-05-31 ...
+   2025-06-01 – 2025-06-30 ...
+   2025-07-01 – 2025-07-31 ...
+   2025-08-01 – 2025-08-31 ...
+   2025-09-01 – 2025-09-30 ...
+   2025-10-01 – 2025-10-31 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>weather_daily <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(weather_list, <span class="at">use.names =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(weather_daily))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         date temp_mean_F precip_in
+       &lt;Date&gt;       &lt;num&gt;     &lt;num&gt;
+1: 2024-10-01        63.0     0.000
+2: 2024-10-02        61.2     0.000
+3: 2024-10-03        63.6     0.004
+4: 2024-10-04        63.3     0.008
+5: 2024-10-05        64.9     0.016
+6: 2024-10-06        60.6     0.000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">tail</span>(weather_daily))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         date temp_mean_F precip_in
+       &lt;Date&gt;       &lt;num&gt;     &lt;num&gt;
+1: 2025-10-26        49.8     0.004
+2: 2025-10-27        45.9     0.000
+3: 2025-10-28        47.5     0.000
+4: 2025-10-29        50.3     0.004
+5: 2025-10-30        56.7     1.748
+6: 2025-10-31        52.6     0.000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>weather_out <span class="ot">&lt;-</span> <span class="fu">file.path</span>(out_dir, <span class="st">"weather_daily_10036_202410_202510.rds"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(weather_daily, weather_out)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Saved daily weather to: "</span>, weather_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saved daily weather to: data/processed/weather_daily_10036_202410_202510.rds</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-filtering" class="level2">
+<h2 class="anchored" data-anchor-id="data-filtering">3. Data Filtering</h2>
+<section id="download-unzip-read-filter-for-manhattan-only-trips" class="level3">
+<h3 class="anchored" data-anchor-id="download-unzip-read-filter-for-manhattan-only-trips">Download, Unzip, Read, Filter for Manhattan Only Trips</h3>
+<p>First, we must download all files relevant to October 2024 to October 2025 from the Citi Bike website.</p>
+<p>Afterwards, we must filter for Manhattan only trips. For one month <code>m</code>, return a <code>data.table</code> containing only trips whose <strong>starting latitude/longitude</strong> falls inside Manhattan.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Why start location only?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note
+Why start location only?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Goal:</strong><br>
-Construct a daily, Manhattan-focused panel that links Citi Bike ridership to local weather conditions using fully reproducible data pipelines.</p>
+<p>We filter trips by <strong>starting latitude/longitude</strong> because that’s where riders actually makes the decision to rent a bike, so it best reflects <em>Manhattan demand</em>.</p>
+<p><strong>Limitations:</strong> This will still include trips that end outside Manhattan, while excluding trips that <em>start outside</em> Manhattan but end inside. It also assumes the recorded start coordinates are accurate.</p>
 </div>
 </div>
-<section id="data-sources" class="level3">
-<h3 class="anchored" data-anchor-id="data-sources">2.1 Data Sources</h3>
-<section id="citi-bike-data" class="level4">
-<h4 class="anchored" data-anchor-id="citi-bike-data">Citi Bike Data</h4>
-<p>Citi Bike trip data provide near-census coverage of all trips taken on the system during the study period (October 2024 through October 2025). Each trip record includes timestamps, start and end locations, and rider type indicators, allowing trips to be aggregated reliably to the daily level.</p>
-</section>
-<section id="open-meteo-api" class="level4">
-<h4 class="anchored" data-anchor-id="open-meteo-api">Open-Meteo API</h4>
-<p>Daily weather data are obtained from the Open-Meteo archive API and include mean daily temperature and total daily precipitation. Observations are drawn from a central Manhattan location to provide a consistent approximation of weather conditions experienced by riders across the borough.</p>
-<p>Weather variables are measured at the daily level to match the temporal resolution of aggregated trip counts.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>download_zip <span class="ot">&lt;-</span> <span class="cf">function</span>(m, <span class="at">max_attempts =</span> <span class="dv">5</span>) {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  zip_name <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%s-citibike-tripdata.zip"</span>, m)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  zip_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(raw_dir, zip_name)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  zip_url  <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_url, <span class="st">"/"</span>, zip_name)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">file.exists</span>(zip_path)) {</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"Zip already exists: "</span>, zip_name)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(zip_path)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (attempt <span class="cf">in</span> <span class="fu">seq_len</span>(max_attempts)) {</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"Downloading (attempt "</span>, attempt, <span class="st">"): "</span>, zip_name)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">file.exists</span>(zip_path)) <span class="fu">file.remove</span>(zip_path)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    ok <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>      utils<span class="sc">::</span><span class="fu">download.file</span>(zip_url, zip_path, <span class="at">mode =</span> <span class="st">"wb"</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"  Download error: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>      <span class="cn">FALSE</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (ok <span class="sc">&amp;&amp;</span> <span class="fu">file.exists</span>(zip_path)) {</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"  Download complete: "</span>, zip_name)</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(zip_path)</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Sys.sleep</span>(<span class="dv">10</span> <span class="sc">*</span> attempt)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Failed to download after "</span>, max_attempts, <span class="st">" attempts: "</span>, zip_url)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>process_month_manhattan <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>  zip_name <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%s-citibike-tripdata.zip"</span>, m)</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>  zip_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(raw_dir, zip_name)</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Download if missing</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(zip_path)) {</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>    zip_path <span class="ot">&lt;-</span> <span class="fu">download_zip</span>(m)</span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"</span><span class="sc">\n</span><span class="st"> Processing month: "</span>, m)</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1) Unzip to a temporary directory</span></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>  tmpdir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), m)</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(tmpdir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unzip</span>(zip_path, <span class="at">exdir =</span> tmpdir)</span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2) List CSV files inside the unzipped folder</span></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>  csv_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(tmpdir, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(csv_files) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"No CSV files found in "</span>, zip_path)</span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unlink</span>(tmpdir, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>  month_list <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="fu">length</span>(csv_files))</span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3) Process each CSV</span></span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(csv_files)) {</span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>    csv <span class="ot">&lt;-</span> csv_files[i]</span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"  Reading: "</span>, <span class="fu">basename</span>(csv))</span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>    dt <span class="ot">&lt;-</span> <span class="fu">fread</span>(</span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>      csv,</span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">select =</span> <span class="fu">c</span>(</span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">"started_at"</span>,</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ended_at"</span>,</span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">"start_lat"</span>, <span class="st">"start_lng"</span></span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert to POSIXct</span></span>
+<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a>    dt[, started_at <span class="sc">:</span><span class="er">=</span> <span class="fu">as.POSIXct</span>(started_at, <span class="at">tz =</span> <span class="st">"America/New_York"</span>)]</span>
+<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a>    dt[, ended_at   <span class="sc">:</span><span class="er">=</span> <span class="fu">as.POSIXct</span>(ended_at,   <span class="at">tz =</span> <span class="st">"America/New_York"</span>)]</span>
+<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Date/hour format</span></span>
+<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a>    dt[, date <span class="sc">:</span><span class="er">=</span> <span class="fu">as.Date</span>(started_at)]</span>
+<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>    dt[, hour <span class="sc">:</span><span class="er">=</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(started_at, <span class="st">"%H"</span>))]</span>
+<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GIS filter: keep only trips whose starting long. and lat. point are in Manhattan </span></span>
+<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Drop rows with missing start coordinates</span></span>
+<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>    n_before <span class="ot">&lt;-</span> <span class="fu">nrow</span>(dt)</span>
+<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a>    dt <span class="ot">&lt;-</span> dt[<span class="sc">!</span><span class="fu">is.na</span>(start_lat) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(start_lng)]</span>
+<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a>    n_after  <span class="ot">&lt;-</span> <span class="fu">nrow</span>(dt)</span>
+<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (n_after <span class="sc">==</span> <span class="dv">0</span>L) {</span>
+<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"    All rows in this CSV had missing start coords; skipping."</span>)</span>
+<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a>      month_list[[i]] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a>      <span class="cf">next</span></span>
+<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (n_after <span class="sc">&lt;</span> n_before) {</span>
+<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"    Dropped "</span>, n_before <span class="sc">-</span> n_after, <span class="st">" rows with missing start coords."</span>)</span>
+<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Convert start coordinates to sf points</span></span>
+<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a>    dt_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(</span>
+<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a>      dt,</span>
+<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"start_lng"</span>, <span class="st">"start_lat"</span>),</span>
+<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">crs =</span> <span class="dv">4326</span>,</span>
+<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>      <span class="at">remove =</span> <span class="cn">FALSE</span></span>
+<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3) Keep only points inside Manhattan polygon</span></span>
+<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a>    inside_manhattan <span class="ot">&lt;-</span> <span class="fu">st_within</span>(dt_sf, manhattan_poly, <span class="at">sparse =</span> <span class="cn">FALSE</span>)[, <span class="dv">1</span>]</span>
+<span id="cb20-110"><a href="#cb20-110" aria-hidden="true" tabindex="-1"></a>    dt_manhattan <span class="ot">&lt;-</span> dt_sf[inside_manhattan, ]</span>
+<span id="cb20-111"><a href="#cb20-111" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-112"><a href="#cb20-112" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4) Drop geometry to go back to data.table</span></span>
+<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a>    dt_manhattan <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(<span class="fu">st_drop_geometry</span>(dt_manhattan))</span>
+<span id="cb20-114"><a href="#cb20-114" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-115"><a href="#cb20-115" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">nrow</span>(dt_manhattan) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb20-116"><a href="#cb20-116" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"    No Manhattan-start trips in this chunk after GIS filter."</span>)</span>
+<span id="cb20-117"><a href="#cb20-117" aria-hidden="true" tabindex="-1"></a>      month_list[[i]] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb20-118"><a href="#cb20-118" aria-hidden="true" tabindex="-1"></a>      <span class="cf">next</span></span>
+<span id="cb20-119"><a href="#cb20-119" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-120"><a href="#cb20-120" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-121"><a href="#cb20-121" aria-hidden="true" tabindex="-1"></a>    month_list[[i]] <span class="ot">&lt;-</span> dt_manhattan</span>
+<span id="cb20-122"><a href="#cb20-122" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-123"><a href="#cb20-123" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rm</span>(dt, dt_sf, dt_manhattan)</span>
+<span id="cb20-124"><a href="#cb20-124" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gc</span>()</span>
+<span id="cb20-125"><a href="#cb20-125" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-126"><a href="#cb20-126" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-127"><a href="#cb20-127" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4) Combine all Manhattan-start trips for this month</span></span>
+<span id="cb20-128"><a href="#cb20-128" aria-hidden="true" tabindex="-1"></a>  month_all <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(month_list, <span class="at">use.names =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-129"><a href="#cb20-129" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-130"><a href="#cb20-130" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 5) Clean up temp files</span></span>
+<span id="cb20-131"><a href="#cb20-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlink</span>(tmpdir, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-132"><a href="#cb20-132" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-133"><a href="#cb20-133" aria-hidden="true" tabindex="-1"></a>  month_all</span>
+<span id="cb20-134"><a href="#cb20-134" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-135"><a href="#cb20-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-136"><a href="#cb20-136" aria-hidden="true" tabindex="-1"></a>all_months_list <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="fu">length</span>(months))</span>
+<span id="cb20-137"><a href="#cb20-137" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(months)) {</span>
+<span id="cb20-138"><a href="#cb20-138" aria-hidden="true" tabindex="-1"></a>  all_months_list[[i]] <span class="ot">&lt;-</span> <span class="fu">process_month_manhattan</span>(months[i])</span>
+<span id="cb20-139"><a href="#cb20-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gc</span>()</span>
+<span id="cb20-140"><a href="#cb20-140" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-141"><a href="#cb20-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-142"><a href="#cb20-142" aria-hidden="true" tabindex="-1"></a>citibike_manhattan_all <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(all_months_list, <span class="at">use.names =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-143"><a href="#cb20-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-144"><a href="#cb20-144" aria-hidden="true" tabindex="-1"></a>citibike_out <span class="ot">&lt;-</span> <span class="fu">file.path</span>(out_dir, <span class="st">"citibike_manhattan_all_202410_202510.rds"</span>)</span>
+<span id="cb20-145"><a href="#cb20-145" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(citibike_manhattan_all, citibike_out)</span>
+<span id="cb20-146"><a href="#cb20-146" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Saved Manhattan-start trips to: "</span>, citibike_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-title-container flex-fill">
-Tip
+<p>Before, we join our two datasets, we must first clean our raw data directory as there are many files we no longer have any use for.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find only .zip files (non-recursive)</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>zip_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  raw_dir,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.zip$"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(zip_files) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Deleting ZIP files in "</span>, raw_dir)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlink</span>(zip_files, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Deleted "</span>, <span class="fu">length</span>(zip_files), <span class="st">" ZIP files."</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"No ZIP files found in "</span>, raw_dir)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Deleting ZIP files in data/raw</code></pre>
 </div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Why these data work together</strong><br>
-Citi Bike data capture <em>what</em> riders do, while weather data capture <em>the conditions under which those decisions are made</em>. Linking the two allows us to estimate how short-term conditions translate into changes in demand.</p>
-</div>
-</div>
-</section>
-</section>
-<section id="data-acquisition-code" class="level3">
-<h3 class="anchored" data-anchor-id="data-acquisition-code">2.2 Data Acquisition Code</h3>
-<p>All data are acquired programmatically to ensure reproducibility and transparency.</p>
-<section id="trip-data-ingestion" class="level4">
-<h4 class="anchored" data-anchor-id="trip-data-ingestion">Trip data ingestion</h4>
-<p>Citi Bike trip files are downloaded directly from the official system S3 repository on a month-by-month basis. Downloads are wrapped in retry logic with incremental backoff to guard against transient network failures. Files are retrieved only if they are not already present locally, avoiding unnecessary re-downloads.</p>
-<p>Trip files are read using a targeted column selection to reduce memory usage and improve processing speed.</p>
-</section>
-<section id="spatial-filtering" class="level4">
-<h4 class="anchored" data-anchor-id="spatial-filtering">Spatial filtering</h4>
-<p>Manhattan is defined using an official NYC borough boundary shapefile obtained from the NYC Department of City Planning. The geometry is transformed to a standard WGS84 coordinate reference system and used to filter trips via a GIS point-in-polygon operation.</p>
-<p>Only trips whose <strong>starting coordinates</strong> fall within the Manhattan boundary are retained. This spatial filtering approach avoids reliance on station naming conventions and ensures consistent geographic classification across all months.</p>
-</section>
-<section id="weather-data-ingestion" class="level4">
-<h4 class="anchored" data-anchor-id="weather-data-ingestion">Weather data ingestion</h4>
-<p>Weather data are retrieved via parameterized API requests specifying location, date range, units, and time zone. API responses are validated before being converted into a structured daily dataset containing temperature and precipitation measures.</p>
-</section>
-<section id="caching-and-reuse" class="level4">
-<h4 class="anchored" data-anchor-id="caching-and-reuse">Caching and reuse</h4>
-<p>All intermediate and final datasets are saved as compressed RDS files. This design allows downstream analyses to load clean, analysis-ready data without repeating download or cleaning steps, ensuring both efficiency and reproducibility across scripts.</p>
-<div class="callout-success">
-<p><strong>Resulting dataset</strong><br>
-A clean, spatially accurate, daily panel linking Manhattan-origin Citi Bike trips to local weather conditions, suitable for exploratory analysis and non-linear modeling.</p>
-</div>
-</section>
-</section>
-</section>
-<section id="data-cleaning-preparation-exploration" class="level2">
-<h2 class="anchored" data-anchor-id="data-cleaning-preparation-exploration">3. Data Cleaning, Preparation &amp; Exploration</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Goal of this section:</strong><br>
-Prepare a clean, spatially accurate, and analysis-ready dataset that reflects rider decision-making at the start of each Citi Bike trip.</p>
-</div>
-</div>
-<section id="cleaning-preparation" class="level3">
-<h3 class="anchored" data-anchor-id="cleaning-preparation">3.1 Cleaning &amp; Preparation</h3>
-<section id="defining-the-spatial-scope" class="level4">
-<h4 class="anchored" data-anchor-id="defining-the-spatial-scope">Defining the spatial scope</h4>
-<p>To ensure precise geographic filtering, Manhattan was defined using an official NYC borough boundary shapefile. The geometry was transformed to the WGS84 coordinate reference system to better align with the latitude and longitude values reported in the Citi Bike data.</p>
-<p>This GIS-based definition avoids reliance on station names or borough labels, which may be incomplete or inconsistently reported, and instead grounds spatial filtering in geometry.</p>
-</section>
-<section id="importing-and-standardizing-trip-data" class="level4">
-<h4 class="anchored" data-anchor-id="importing-and-standardizing-trip-data">Importing and standardizing trip data</h4>
-<p>Trip data were downloaded month-by-month and processed using a consistent directory structure to support reproducibility. For each CSV file, only variables required for analysis were imported, reducing memory overhead and keeping the dataset focused.</p>
-<p>Trip start and end times were converted to timezone-aware datetime objects using local New York time. From these timestamps, additional temporal variables, such as date and hour, were derived to support daily aggregation and exploratory analysis.</p>
-</section>
-<section id="handling-missing-and-invalid-records" class="level4">
-<h4 class="anchored" data-anchor-id="handling-missing-and-invalid-records">Handling missing and invalid records</h4>
-<p>Trips with missing starting latitude or longitude were excluded prior to spatial filtering, as geographic classification requires valid coordinate information. This step removes records that cannot be reliably assigned to a borough.</p>
-</section>
-<section id="gis-based-manhattan-filtering" class="level4">
-<h4 class="anchored" data-anchor-id="gis-based-manhattan-filtering">GIS-based Manhattan filtering</h4>
-<p>Starting coordinates were converted into spatial point objects and evaluated using a point-in-polygon operation against the Manhattan boundary. Only trips whose <strong>starting location</strong> fell within Manhattan were retained.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Why filter on trip start?</strong><br>
-Rider decisions are made at the beginning of a trip. As such, we ultimately decided that restricting our analysis to trips that start in Manhattan reflects demand originating from within the borough, rather than trips that merely pass through or end there.</p>
+<div class="cell-output cell-output-stderr">
+<pre><code>Deleted 13 ZIP files.</code></pre>
 </div>
 </div>
 </section>
-<section id="dataset-consolidation-and-storage" class="level4">
-<h4 class="anchored" data-anchor-id="dataset-consolidation-and-storage">Dataset consolidation and storage</h4>
-<p>Cleaned trips were combined across CSV chunks within each month, then concatenated across all months into a single dataset spanning October 2024 through October 2025. The resulting dataset was then saved as a compressed RDS file to enable for fast loading and consistent reuse in subsequent steps.</p>
 </section>
+<section id="join-bike-and-weather-data" class="level2">
+<h2 class="anchored" data-anchor-id="join-bike-and-weather-data">4. Join Bike and Weather Data</h2>
+<p>To start, we have to load the cleaned Manhattan Citi Bike trips file and the daily weather file that we created earlier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Loading Citi Bike and weather data</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loading Citi Bike and weather data</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>citibike_path <span class="ot">&lt;-</span> <span class="st">"data/processed/citibike_manhattan_all_202410_202510.rds"</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>weather_path  <span class="ot">&lt;-</span> <span class="st">"data/processed/weather_daily_10036_202410_202510.rds"</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(citibike_path)) <span class="fu">stop</span>(<span class="st">"Missing Citi Bike file"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(weather_path)) <span class="fu">stop</span>(<span class="st">"Missing weather file"</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>citibike <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(citibike_path)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(weather_path)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">setDT</span>(citibike)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="fu">setDT</span>(daily_weather)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Citi Bike data is trip-level (many rows per day), so we first collapse it into one row per day by counting trips.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Building daily Citi Bike trip counts</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Building daily Citi Bike trip counts</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Build daily trips</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>citibike[, date <span class="sc">:</span><span class="er">=</span> <span class="fu">as.Date</span>(started_at)]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>daily_trips <span class="ot">&lt;-</span> citibike[, .(<span class="at">n_trips =</span> .N), by <span class="ot">=</span> .(date)]</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>daily_trips <span class="ot">&lt;-</span> daily_trips[date <span class="sc">&gt;=</span> <span class="st">"2024-10-01"</span> <span class="sc">&amp;</span> date <span class="sc">&lt;=</span> <span class="st">"2025-10-31"</span>]</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setorder</span>(daily_trips, date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now both datasets are daily, so we merge them on date.<br>
+<code>all.x = TRUE</code> keeps all days with Citi Bike trips, even if weather is missing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Merging Citi Bike daily counts with weather</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Merging Citi Bike daily counts with weather</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Merge trips + weather</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>daily <span class="ot">&lt;-</span> <span class="fu">merge</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  daily_trips,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  daily_weather,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"date"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">all.x =</span> <span class="cn">TRUE</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This saves the final day-level dataset that will be used as input for the graphs/models.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"shiny"</span>,     <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Saving combined daily panel</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Saving combined daily panel</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Save merged panel</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>panel_path <span class="ot">&lt;-</span> <span class="st">"data/processed/daily_trips_weather_202410_202510.rds"</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(daily, panel_path)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Saved daily panel to:"</span>, panel_path, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Saved daily panel to: data/processed/daily_trips_weather_202410_202510.rds </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Save merged panel for shiny deployment</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>panel_path <span class="ot">&lt;-</span> <span class="st">"shiny/daily_trips_weather_202410_202510.rds"</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(daily, panel_path)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Saved daily panel to:"</span>, panel_path, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Saved daily panel to: shiny/daily_trips_weather_202410_202510.rds </code></pre>
+</div>
+</div>
 </section>
-</section>
-<section id="analytical-strategy" class="level2">
-<h2 class="anchored" data-anchor-id="analytical-strategy">4. Analytical Strategy</h2>
-<p>Daily trip counts are modeled as a function of weather using Generalized Additive Models (GAMs). Preliminary exploration revealed strong departures from linearity in the relationship between temperature and ridership, motivating the use of flexible smooth terms rather than parametric regression.</p>
-<p>GAMs allow the data to determine functional form while maintaining interpretability. Smoothness is constrained to avoid overfitting, and model adequacy is assessed using effective degrees of freedom and deviance explained. This approach balances flexibility with transparency and is well-suited to isolating weather-driven demand effects.</p>
-</section>
-<section id="results" class="level2">
-<h2 class="anchored" data-anchor-id="results">5. Results</h2>
-<section id="main-findings" class="level3">
-<h3 class="anchored" data-anchor-id="main-findings">5.1 Main Findings</h3>
-<p>Temperature exhibits a strong and statistically significant non-linear association with daily trip volume. Ridership increases rapidly as temperatures rise from cold to mild conditions, but marginal gains diminish at higher temperatures, indicating a comfort threshold beyond which additional warmth does not increase demand.</p>
-<p>Precipitation reduces ridership in an asymmetric manner. Light rain has limited impact on typical daily usage, while moderate to heavy rainfall leads to substantial declines in trip volume, particularly in the upper tail of the distribution.</p>
-</section>
-<section id="robustness-validation" class="level3">
-<h3 class="anchored" data-anchor-id="robustness-validation">5.2 Robustness / Validation</h3>
-</section>
-</section>
-<section id="visualization" class="level2">
-<h2 class="anchored" data-anchor-id="visualization">6. Visualization</h2>
-</section>
-<section id="discussion" class="level2">
-<h2 class="anchored" data-anchor-id="discussion">7. Discussion</h2>
-<section id="answer" class="level3">
-<h3 class="anchored" data-anchor-id="answer">7.1 Answer</h3>
-</section>
-<section id="contribution-to-the-oq" class="level3">
-<h3 class="anchored" data-anchor-id="contribution-to-the-oq">7.2 Contribution to the OQ</h3>
-<p>This weather-focused analysis makes an irreplaceable contribution to the overarching question by separating short-run demand suppression from longer-run structural determinants of ridership. Without explicitly modeling non-linear weather effects, analyses of time-of-day patterns, rider type, or infrastructure risk attributing weather-driven fluctuations to persistent system features. By isolating these effects, this report provides a necessary baseline against which other project components can be interpreted.</p>
-</section>
-</section>
-<section id="limitations-future-work" class="level2">
-<h2 class="anchored" data-anchor-id="limitations-future-work">8. Limitations &amp; Future Work</h2>
-</section>
-<section id="reproducibility-appendix" class="level2">
-<h2 class="anchored" data-anchor-id="reproducibility-appendix">9. Reproducibility Appendix</h2>
+<section id="plot-data" class="level2">
+<h2 class="anchored" data-anchor-id="plot-data">5. Plot Data</h2>
+<p>Now that we’ve joined the Citi Bike and weather data into one daily dataset, we can move on to the visualization portion.</p>
+<p>We will be creating two plots that directly answer our weather question:</p>
+<p><strong>(1)</strong> a scatterplot of daily trips versus temperature with a <strong>GAM smooth</strong> to capture any non-linear relationship, and <strong>(2)</strong> a boxplot comparing daily trip volume across <strong>rain intensity categories</strong> to show how precipitation shifts ridership distributions.</p>
+<p>To access these plots, please use the interactive dashboard below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Interactive Dashboard</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>htmltools<span class="sc">::</span>tags<span class="sc">$</span><span class="fu">iframe</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">src =</span> <span class="st">"https://citibikenyc.shinyapps.io/appTemp/"</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"width:100%; height:900px; border:0;"</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<iframe src="https://citibikenyc.shinyapps.io/appTemp/" style="width:100%; height:900px; border:0;"></iframe>
+</div>
+</div>
 
 
 </section>

@@ -1,134 +1,514 @@
 ---
 title: "Effects of Temperature and Precipitation on Bike Ridership"
-format: html
+format: 
+  html: 
+    toc: false
+    page-layout: full
 author: Christopher Tan
+execute: 
+  freeze: auto
 ---
 
 ## 1. Overview
 
-This report will work to examine how daily weather conditions shape Citi Bike demand in Manhattan, with a focus on the effects of temperature and precipitation on total trip volume. This analysis contributes to the broader project question of how several environmental and behavioral factors jointly determine ridership patterns.
+Citi Bike demand can change substantially from one day to the next, and weather is one of the most direct reasons why. Unlike long recreational rides, many Citi Bike trips in Manhattan are short, purpose driven trips such as commutes to work, quick errands, or first and last mile connections to the subway. Because these trips are often discretionary at the margin, riders continuously weigh the convenience of biking against comfort and perceived safety.
 
-The specific question that I'll be answering is:
+Temperature plays a key role in this decision making process. Warmer days generally lower the physical and mental barrier to riding, making biking feel easier and more pleasant, which can lead to higher overall trip volume. In contrast, colder days can discourage riding due to discomfort. Precipitation adds another layer of friction by reducing comfort and increasing safety concerns such as slippery roads and reduced visibility, leading some riders to choose alternative modes of transportation.
 
-> *How do daily temperature and precipitation levels affect Citi Bike trip volume in Manhattan, and to what extent are these effects non-linear?*
+Together, these patterns suggest that daily weather conditions may systematically influence Citi Bike usage. To quantify this relationship and move beyond intuition, this analysis focuses on the following question:
 
-## 2. Data Sources & Acquisition
+> *How do daily temperature and precipitation levels affect Citi Bike trip volume in Manhattan?*
 
-::: callout-note
-**Goal:**\
-Construct a daily, Manhattan-focused panel that links Citi Bike ridership to local weather conditions using fully reproducible data pipelines.
+## 2. Data Preparation
+
+### Install packages
+
+First, we must load the following:
+
+-   `data.table` for fast CSV reading and big-data manipulation
+
+-   `sf` for spatial operations (point-in-polygon)
+
+-   `utils` for downloads
+
+-   `httr` + `jsonlite` for calling the weather API and parsing JSON
+
+-   `htmltools` for the iFrame embed
+
+```{r}
+library(data.table)
+library(sf)
+library(utils)
+library(httr)
+library(jsonlite)
+library(htmltools)
+```
+
+### Directories
+
+```{r}
+raw_dir <- "data/raw"          # zipped tripdata
+out_dir <- "data/processed"    # cleaned outputs
+gis_dir <- "data/gis"          # borough shapefile
+
+dir.create(raw_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(gis_dir, showWarnings = FALSE, recursive = TRUE)
+
+```
+
+### Download Settings
+
+Two stability tweaks for large downloads:
+
+-   longer timeout
+
+-   `libcurl` download method
+
+```{r}
+options(download.file.method = "libcurl")
+
+```
+
+### Time Window
+
+Define the month labels Citi Bike uses (`YYYYMM`) and the base URL.
+
+```{r}
+months <- format(
+  seq(as.Date("2024-10-01"), as.Date("2025-10-01"), by = "month"),
+  "%Y%m"
+)
+base_url <- "https://s3.amazonaws.com/tripdata"
+```
+
+### Download Manhattan Polygon (GIS)
+
+We must download NYC borough boundaries, read them as an `sf` object, convert to standard lat/lon (EPSG:4326), then extract **only Manhattan** as `manhattan_poly`. That polygon is used later to filter trips.
+
+```{r}
+borough_url <- "https://www.nyc.gov/assets/planning/download/zip/data-maps/open-data/nybb_16a.zip"
+borough_zip <- file.path(gis_dir, "nyc_boroughs.zip")
+
+if (!file.exists(borough_zip)) {
+  message("Downloading NYC borough boundaries shapefile...")
+  download.file(borough_url, borough_zip, mode = "wb")
+}
+
+unzip(borough_zip, exdir = gis_dir)
+
+shp_file <- list.files(gis_dir, pattern = "\\.shp$", recursive = TRUE, full.names = TRUE)[1]
+if (is.na(shp_file)) stop("No .shp file found in ", gis_dir, " after unzip.")
+
+boroughs <- st_read(shp_file, quiet = TRUE)
+boroughs <- st_transform(boroughs, 4326)
+
+if (!("BoroName" %in% names(boroughs))) {
+  stop("Could not find a 'BoroName' column in borough shapefile.")
+}
+
+manhattan_poly <- boroughs[boroughs$BoroName == "Manhattan", ]
+if (nrow(manhattan_poly) == 0) stop("Manhattan polygon not found in boroughs shapefile.")
+
+```
+
+### Download from Open-Meteo
+
+Set location:
+
+```{r}
+# used Midtown as our reference point
+latitude  <- 40.75493
+longitude <- -73.98402
+```
+
+Query Open-Meteo for daily:
+
+-   mean temperature (`temperature_2m_mean`)
+
+-   precipitation sum (`precipitation_sum`)
+
+```{r}
+get_monthly_weather <- function(lat, lon, start_date, end_date, max_attempts = 5) {
+  
+  # Use archive endpoint for past dates (more appropriate for historical pulls)
+  base_url <- "https://api.open-meteo.com/v1/forecast"
+  if (as.Date(start_date) < Sys.Date()) {
+    base_url <- "https://archive-api.open-meteo.com/v1/archive"
+  }
+  
+  params <- list(
+    latitude           = lat,
+    longitude          = lon,
+    start_date         = start_date,
+    end_date           = end_date,
+    daily              = "temperature_2m_mean,precipitation_sum",
+    temperature_unit   = "fahrenheit",
+    precipitation_unit = "inch",
+    timezone           = "America/New_York"
+  )
+  
+  for (attempt in seq_len(max_attempts)) {
+    
+    # Robust request: longer timeout + safe error handling
+    resp <- tryCatch(
+      GET(base_url, query = params, timeout(60)),
+      error = function(e) e
+    )
+    
+    # If the request failed (DNS/timeout/etc.), retry with backoff
+    if (inherits(resp, "error")) {
+      message("Weather request error (attempt ", attempt, "): ", resp$message)
+      Sys.sleep(2 ^ attempt)
+      next
+    }
+    
+    # If server returns non-200, retry (could be temporary)
+    if (status_code(resp) != 200) {
+      message("Weather request failed (attempt ", attempt, ") status: ",
+              status_code(resp))
+      Sys.sleep(2 ^ attempt)
+      next
+    }
+    
+    # Parse JSON
+    dat <- fromJSON(content(resp, "text", encoding = "UTF-8"))
+    
+    # If daily data is missing, retry
+    if (is.null(dat$daily$time)) {
+      message("No daily data returned (attempt ", attempt, ") for ",
+              start_date, "–", end_date)
+      Sys.sleep(2 ^ attempt)
+      next
+    }
+    
+    # Success: return clean daily table
+    return(data.table::data.table(
+      date        = as.Date(dat$daily$time),
+      temp_mean_F = dat$daily$temperature_2m_mean,
+      precip_in   = dat$daily$precipitation_sum
+    ))
+  }
+  
+  warning("Failed to fetch weather after ", max_attempts, " attempts for ",
+          start_date, "–", end_date)
+  NULL
+}
+
+```
+
+Build a list of month ranges, call the API month-by-month, combine results, and save.
+
+-   `Sys.sleep(0.5)` is a rate-limit to reduce API stress
+
+-   `head()`/`tail()` prints are quick checks to make sure that data has properly settled
+
+```{r}
+date_ranges <- list(
+  list(start = "2024-10-01", end = "2024-10-31"),
+  list(start = "2024-11-01", end = "2024-11-30"),
+  list(start = "2024-12-01", end = "2024-12-31"),
+  list(start = "2025-01-01", end = "2025-01-31"),
+  list(start = "2025-02-01", end = "2025-02-28"),
+  list(start = "2025-03-01", end = "2025-03-31"),
+  list(start = "2025-04-01", end = "2025-04-30"),
+  list(start = "2025-05-01", end = "2025-05-31"),
+  list(start = "2025-06-01", end = "2025-06-30"),
+  list(start = "2025-07-01", end = "2025-07-31"),
+  list(start = "2025-08-01", end = "2025-08-31"),
+  list(start = "2025-09-01", end = "2025-09-30"),
+  list(start = "2025-10-01", end = "2025-10-31")
+)
+
+cat("Getting daily weather data for Manhattan\n")
+weather_list <- vector("list", length(date_ranges))
+
+for (i in seq_along(date_ranges)) {
+  dr <- date_ranges[[i]]
+  cat("  ", dr$start, "–", dr$end, "...\n")
+  weather_list[[i]] <- get_monthly_weather(latitude, longitude, dr$start, dr$end)
+  Sys.sleep(0.5)
+}
+
+weather_daily <- rbindlist(weather_list, use.names = TRUE, fill = TRUE)
+
+print(head(weather_daily))
+print(tail(weather_daily))
+
+weather_out <- file.path(out_dir, "weather_daily_10036_202410_202510.rds")
+saveRDS(weather_daily, weather_out)
+message("Saved daily weather to: ", weather_out)
+```
+
+## 3. Data Filtering
+
+### Download, Unzip, Read, Filter for Manhattan Only Trips
+
+First, we must download all files relevant to October 2024 to October 2025 from the Citi Bike website.
+
+Afterwards, we must filter for Manhattan only trips. For one month `m`, return a `data.table` containing only trips whose **starting latitude/longitude** falls inside Manhattan.
+
+::: {.callout-note title="Why start location only?"}
+We filter trips by **starting latitude/longitude** because that’s where riders actually makes the decision to rent a bike, so it best reflects *Manhattan demand*.
+
+**Limitations:** This will still include trips that end outside Manhattan, while excluding trips that *start outside* Manhattan but end inside. It also assumes the recorded start coordinates are accurate.
 :::
 
-### 2.1 Data Sources
+```{r, message=FALSE, warning=FALSE}
+download_zip <- function(m, max_attempts = 5) {
+  zip_name <- sprintf("%s-citibike-tripdata.zip", m)
+  zip_path <- file.path(raw_dir, zip_name)
+  zip_url  <- paste0(base_url, "/", zip_name)
 
-#### Citi Bike Data
+  if (file.exists(zip_path)) {
+    message("Zip already exists: ", zip_name)
+    return(zip_path)
+  }
 
-Citi Bike trip data provide near-census coverage of all trips taken on the system during the study period (October 2024 through October 2025). Each trip record includes timestamps, start and end locations, and rider type indicators, allowing trips to be aggregated reliably to the daily level.
+  for (attempt in seq_len(max_attempts)) {
+    message("Downloading (attempt ", attempt, "): ", zip_name)
 
-#### Open-Meteo API
+    if (file.exists(zip_path)) file.remove(zip_path)
 
-Daily weather data are obtained from the Open-Meteo archive API and include mean daily temperature and total daily precipitation. Observations are drawn from a central Manhattan location to provide a consistent approximation of weather conditions experienced by riders across the borough.
+    ok <- tryCatch({
+      utils::download.file(zip_url, zip_path, mode = "wb", quiet = FALSE)
+      TRUE
+    }, error = function(e) {
+      message("  Download error: ", conditionMessage(e))
+      FALSE
+    })
 
-Weather variables are measured at the daily level to match the temporal resolution of aggregated trip counts.
+    if (ok && file.exists(zip_path)) {
+      message("  Download complete: ", zip_name)
+      return(zip_path)
+    }
 
-::: callout-tip
-**Why these data work together**\
-Citi Bike data capture *what* riders do, while weather data capture *the conditions under which those decisions are made*. Linking the two allows us to estimate how short-term conditions translate into changes in demand.
-:::
+    Sys.sleep(10 * attempt)
+  }
 
-### 2.2 Data Acquisition Code
+  stop("Failed to download after ", max_attempts, " attempts: ", zip_url)
+}
 
-All data are acquired programmatically to ensure reproducibility and transparency.
+process_month_manhattan <- function(m) {
+  zip_name <- sprintf("%s-citibike-tripdata.zip", m)
+  zip_path <- file.path(raw_dir, zip_name)
+  
+  # Download if missing
+  if (!file.exists(zip_path)) {
+    zip_path <- download_zip(m)
+  }
+  
+  message("\n Processing month: ", m)
+  
+  # 1) Unzip to a temporary directory
+  tmpdir <- file.path(tempdir(), m)
+  dir.create(tmpdir, showWarnings = FALSE)
+  unzip(zip_path, exdir = tmpdir)
+  
+  # 2) List CSV files inside the unzipped folder
+  csv_files <- list.files(tmpdir, pattern = "\\.csv$", full.names = TRUE)
+  
+  if (length(csv_files) == 0) {
+    warning("No CSV files found in ", zip_path)
+    unlink(tmpdir, recursive = TRUE)
+    return(NULL)
+  }
+  
+  month_list <- vector("list", length(csv_files))
+  
+  # 3) Process each CSV
+  for (i in seq_along(csv_files)) {
+    csv <- csv_files[i]
+    message("  Reading: ", basename(csv))
+    
+    dt <- fread(
+      csv,
+      select = c(
+        "started_at",
+        "ended_at",
+        "start_lat", "start_lng"
+      )
+    )
+    
+    # Convert to POSIXct
+    dt[, started_at := as.POSIXct(started_at, tz = "America/New_York")]
+    dt[, ended_at   := as.POSIXct(ended_at,   tz = "America/New_York")]
+    
+    # Date/hour format
+    dt[, date := as.Date(started_at)]
+    dt[, hour := as.integer(format(started_at, "%H"))]
+    
+    # GIS filter: keep only trips whose starting long. and lat. point are in Manhattan 
+    # 1) Drop rows with missing start coordinates
+    n_before <- nrow(dt)
+    dt <- dt[!is.na(start_lat) & !is.na(start_lng)]
+    n_after  <- nrow(dt)
+    
+    if (n_after == 0L) {
+      message("    All rows in this CSV had missing start coords; skipping.")
+      month_list[[i]] <- NULL
+      next
+    }
+    
+    if (n_after < n_before) {
+      message("    Dropped ", n_before - n_after, " rows with missing start coords.")
+    }
+    
+    # 2) Convert start coordinates to sf points
+    dt_sf <- st_as_sf(
+      dt,
+      coords = c("start_lng", "start_lat"),
+      crs = 4326,
+      remove = FALSE
+    )
+    
+    # 3) Keep only points inside Manhattan polygon
+    inside_manhattan <- st_within(dt_sf, manhattan_poly, sparse = FALSE)[, 1]
+    dt_manhattan <- dt_sf[inside_manhattan, ]
+    
+    # 4) Drop geometry to go back to data.table
+    dt_manhattan <- as.data.table(st_drop_geometry(dt_manhattan))
+    
+    if (nrow(dt_manhattan) == 0) {
+      message("    No Manhattan-start trips in this chunk after GIS filter.")
+      month_list[[i]] <- NULL
+      next
+    }
+    
+    month_list[[i]] <- dt_manhattan
+    
+    rm(dt, dt_sf, dt_manhattan)
+    gc()
+  }
+  
+  # 4) Combine all Manhattan-start trips for this month
+  month_all <- rbindlist(month_list, use.names = TRUE, fill = TRUE)
+  
+  # 5) Clean up temp files
+  unlink(tmpdir, recursive = TRUE)
+  
+  month_all
+}
 
-#### Trip data ingestion
+all_months_list <- vector("list", length(months))
+for (i in seq_along(months)) {
+  all_months_list[[i]] <- process_month_manhattan(months[i])
+  gc()
+}
 
-Citi Bike trip files are downloaded directly from the official system S3 repository on a month-by-month basis. Downloads are wrapped in retry logic with incremental backoff to guard against transient network failures. Files are retrieved only if they are not already present locally, avoiding unnecessary re-downloads.
+citibike_manhattan_all <- rbindlist(all_months_list, use.names = TRUE, fill = TRUE)
 
-Trip files are read using a targeted column selection to reduce memory usage and improve processing speed.
+citibike_out <- file.path(out_dir, "citibike_manhattan_all_202410_202510.rds")
+saveRDS(citibike_manhattan_all, citibike_out)
+message("Saved Manhattan-start trips to: ", citibike_out)
+```
 
-#### Spatial filtering
+Before, we join our two datasets, we must first clean our raw data directory as there are many files we no longer have any use for.
 
-Manhattan is defined using an official NYC borough boundary shapefile obtained from the NYC Department of City Planning. The geometry is transformed to a standard WGS84 coordinate reference system and used to filter trips via a GIS point-in-polygon operation.
+```{r}
+# Find only .zip files (non-recursive)
+zip_files <- list.files(
+  raw_dir,
+  pattern = "\\.zip$",
+  full.names = TRUE
+)
 
-Only trips whose **starting coordinates** fall within the Manhattan boundary are retained. This spatial filtering approach avoids reliance on station naming conventions and ensures consistent geographic classification across all months.
+if (length(zip_files) > 0) {
+  message("Deleting ZIP files in ", raw_dir)
+  unlink(zip_files, force = TRUE)
+  message("Deleted ", length(zip_files), " ZIP files.")
+} else {
+  message("No ZIP files found in ", raw_dir)
+}
 
-#### Weather data ingestion
+```
 
-Weather data are retrieved via parameterized API requests specifying location, date range, units, and time zone. API responses are validated before being converted into a structured daily dataset containing temperature and precipitation measures.
+## 4. Join Bike and Weather Data
 
-#### Caching and reuse
+To start, we have to load the cleaned Manhattan Citi Bike trips file and the daily weather file that we created earlier.
 
-All intermediate and final datasets are saved as compressed RDS files. This design allows downstream analyses to load clean, analysis-ready data without repeating download or cleaning steps, ensuring both efficiency and reproducibility across scripts.
+```{r}
+cat("Loading Citi Bike and weather data\n")
 
-::: callout-success
-**Resulting dataset**\
-A clean, spatially accurate, daily panel linking Manhattan-origin Citi Bike trips to local weather conditions, suitable for exploratory analysis and non-linear modeling.
-:::
+## Load data
+citibike_path <- "data/processed/citibike_manhattan_all_202410_202510.rds"
+weather_path  <- "data/processed/weather_daily_10036_202410_202510.rds"
 
-## 3. Data Cleaning, Preparation & Exploration
+if (!file.exists(citibike_path)) stop("Missing Citi Bike file")
+if (!file.exists(weather_path)) stop("Missing weather file")
 
-::: callout-note
-**Goal of this section:**\
-Prepare a clean, spatially accurate, and analysis-ready dataset that reflects rider decision-making at the start of each Citi Bike trip.
-:::
+citibike <- readRDS(citibike_path)
+daily_weather <- readRDS(weather_path)
 
-### 3.1 Cleaning & Preparation
+setDT(citibike)
+setDT(daily_weather)
+```
 
-#### Defining the spatial scope
+Citi Bike data is trip-level (many rows per day), so we first collapse it into one row per day by counting trips.
 
-To ensure precise geographic filtering, Manhattan was defined using an official NYC borough boundary shapefile. The geometry was transformed to the WGS84 coordinate reference system to better align with the latitude and longitude values reported in the Citi Bike data.
+```{r}
+cat("Building daily Citi Bike trip counts\n")
 
-This GIS-based definition avoids reliance on station names or borough labels, which may be incomplete or inconsistently reported, and instead grounds spatial filtering in geometry.
+## Build daily trips
+citibike[, date := as.Date(started_at)]
+daily_trips <- citibike[, .(n_trips = .N), by = .(date)]
+daily_trips <- daily_trips[date >= "2024-10-01" & date <= "2025-10-31"]
+setorder(daily_trips, date)
+```
 
-#### Importing and standardizing trip data
+Now both datasets are daily, so we merge them on date.\
+`all.x = TRUE` keeps all days with Citi Bike trips, even if weather is missing.
 
-Trip data were downloaded month-by-month and processed using a consistent directory structure to support reproducibility. For each CSV file, only variables required for analysis were imported, reducing memory overhead and keeping the dataset focused.
+```{r}
+cat("Merging Citi Bike daily counts with weather\n")
 
-Trip start and end times were converted to timezone-aware datetime objects using local New York time. From these timestamps, additional temporal variables, such as date and hour, were derived to support daily aggregation and exploratory analysis.
+## Merge trips + weather
+daily <- merge(
+  daily_trips,
+  daily_weather,
+  by = "date",
+  all.x = TRUE
+)
+```
 
-#### Handling missing and invalid records
+This saves the final day-level dataset that will be used as input for the graphs/models.
 
-Trips with missing starting latitude or longitude were excluded prior to spatial filtering, as geographic classification requires valid coordinate information. This step removes records that cannot be reliably assigned to a borough.
+```{r}
+dir.create("shiny",     showWarnings = FALSE, recursive = TRUE)
 
-#### GIS-based Manhattan filtering
+cat("Saving combined daily panel\n")
 
-Starting coordinates were converted into spatial point objects and evaluated using a point-in-polygon operation against the Manhattan boundary. Only trips whose **starting location** fell within Manhattan were retained.
+## Save merged panel
+panel_path <- "data/processed/daily_trips_weather_202410_202510.rds"
+saveRDS(daily, panel_path)
 
-::: callout-note
-**Why filter on trip start?**\
-Rider decisions are made at the beginning of a trip. As such, we ultimately decided that restricting our analysis to trips that start in Manhattan reflects demand originating from within the borough, rather than trips that merely pass through or end there.
-:::
+cat("Saved daily panel to:", panel_path, "\n")
 
-#### Dataset consolidation and storage
 
-Cleaned trips were combined across CSV chunks within each month, then concatenated across all months into a single dataset spanning October 2024 through October 2025. The resulting dataset was then saved as a compressed RDS file to enable for fast loading and consistent reuse in subsequent steps.
+## Save merged panel for shiny deployment
+panel_path <- "shiny/daily_trips_weather_202410_202510.rds"
+saveRDS(daily, panel_path)
 
-## 4. Analytical Strategy
+cat("Saved daily panel to:", panel_path, "\n")
 
-Daily trip counts are modeled as a function of weather using Generalized Additive Models (GAMs). Preliminary exploration revealed strong departures from linearity in the relationship between temperature and ridership, motivating the use of flexible smooth terms rather than parametric regression.
 
-GAMs allow the data to determine functional form while maintaining interpretability. Smoothness is constrained to avoid overfitting, and model adequacy is assessed using effective degrees of freedom and deviance explained. This approach balances flexibility with transparency and is well-suited to isolating weather-driven demand effects.
+```
 
-## 5. Results
+## 5. Plot Data
 
-### 5.1 Main Findings
+Now that we’ve joined the Citi Bike and weather data into one daily dataset, we can move on to the visualization portion.
 
-Temperature exhibits a strong and statistically significant non-linear association with daily trip volume. Ridership increases rapidly as temperatures rise from cold to mild conditions, but marginal gains diminish at higher temperatures, indicating a comfort threshold beyond which additional warmth does not increase demand.
+We will be creating two plots that directly answer our weather question:
 
-Precipitation reduces ridership in an asymmetric manner. Light rain has limited impact on typical daily usage, while moderate to heavy rainfall leads to substantial declines in trip volume, particularly in the upper tail of the distribution.
+**(1)** a scatterplot of daily trips versus temperature with a **GAM smooth** to capture any non-linear relationship, and **(2)** a boxplot comparing daily trip volume across **rain intensity categories** to show how precipitation shifts ridership distributions.
 
-### 5.2 Robustness / Validation
+To access these plots, please use the interactive dashboard below:
 
-## 6. Visualization
+```{r}
+## Interactive Dashboard
+htmltools::tags$iframe(
+  src = "https://citibikenyc.shinyapps.io/appTemp/",
+  style = "width:100%; height:900px; border:0;"
+)
 
-## 7. Discussion
-
-### 7.1 Answer
-
-### 7.2 Contribution to the OQ
-
-This weather-focused analysis makes an irreplaceable contribution to the overarching question by separating short-run demand suppression from longer-run structural determinants of ridership. Without explicitly modeling non-linear weather effects, analyses of time-of-day patterns, rider type, or infrastructure risk attributing weather-driven fluctuations to persistent system features. By isolating these effects, this report provides a necessary baseline against which other project components can be interpreted.
-
-## 8. Limitations & Future Work
-
-## 9. Reproducibility Appendix
+```
