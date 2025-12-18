@@ -74,7 +74,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -88,7 +88,32 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./Home.html" aria-current="page"> 
-<span class="menu-text">Home</span></a>
+<span class="menu-text">Group Report</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://starnovalight.github.io/STA9750-2025-FALL/pop00.html"> 
+<span class="menu-text">SQ1: Most Popular Routes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://thecyclepaths.netlify.app/sq2.html"> 
+<span class="menu-text">SQ2: Temperature vs.&nbsp;Precipitation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://jiminhong123.github.io/STA9750-2025-FALL/Individual_report.html"> 
+<span class="menu-text">SQ3: Members vs.&nbsp;Casual Riders</span></a>
+  </li>  
+  <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">SQ4: Protected vs. Shared Bike Lanes</span>
+    </span>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://karenn-dotcom.github.io/STA9750-2025-FALL/ind_rep.html"> 
+<span class="menu-text">SQ5: Time of Day &amp; Day of Week</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://sabrinazhuu.github.io/STA9750-2025-FALL/individual_report.html"> 
+<span class="menu-text">SQ6: E-Bike vs.&nbsp;Classic Bike</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -98,12 +123,62 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overarching-question-oq" id="toc-overarching-question-oq" class="nav-link active" data-scroll-target="#overarching-question-oq">Overarching Question (OQ)</a></li>
+  <li><a href="#specific-questions-sqs" id="toc-specific-questions-sqs" class="nav-link" data-scroll-target="#specific-questions-sqs">Specific Questions (SQs)</a>
+  <ul class="collapse">
+  <li><a href="#what-are-the-most-popular-bike-routes-and-resting-stops" id="toc-what-are-the-most-popular-bike-routes-and-resting-stops" class="nav-link" data-scroll-target="#what-are-the-most-popular-bike-routes-and-resting-stops">What are the most popular bike routes and resting stops?</a></li>
+  <li><a href="#how-do-temperature-and-precipitation-affect-ridership-activity" id="toc-how-do-temperature-and-precipitation-affect-ridership-activity" class="nav-link" data-scroll-target="#how-do-temperature-and-precipitation-affect-ridership-activity">How do temperature and precipitation affect ridership activity?</a></li>
+  <li><a href="#how-does-rider-type-influence-both-demand-and-riding-patterns" id="toc-how-does-rider-type-influence-both-demand-and-riding-patterns" class="nav-link" data-scroll-target="#how-does-rider-type-influence-both-demand-and-riding-patterns">How does rider type influence both demand and riding patterns?</a></li>
+  <li><a href="#is-station-ridership-higher-near-protected-lanes-than-shared-lanes" id="toc-is-station-ridership-higher-near-protected-lanes-than-shared-lanes" class="nav-link" data-scroll-target="#is-station-ridership-higher-near-protected-lanes-than-shared-lanes">Is station ridership higher near protected lanes than shared lanes?</a></li>
+  <li><a href="#how-does-time-of-day-and-day-of-week-impact-overall-ridership-trends" id="toc-how-does-time-of-day-and-day-of-week-impact-overall-ridership-trends" class="nav-link" data-scroll-target="#how-does-time-of-day-and-day-of-week-impact-overall-ridership-trends">How does time of day and day of week impact overall ridership trends?</a></li>
+  <li><a href="#how-does-station-infrastructure-relate-to-e-bike-versus-classic-bike-usage" id="toc-how-does-station-infrastructure-relate-to-e-bike-versus-classic-bike-usage" class="nav-link" data-scroll-target="#how-does-station-infrastructure-relate-to-e-bike-versus-classic-bike-usage">How does station infrastructure relate to e-bike versus classic bike usage?</a></li>
+  </ul></li>
+  <li><a href="#data-sources-and-limitations" id="toc-data-sources-and-limitations" class="nav-link" data-scroll-target="#data-sources-and-limitations">Data Sources and Limitations</a></li>
+  <li><a href="#scope-and-framing-choices" id="toc-scope-and-framing-choices" class="nav-link" data-scroll-target="#scope-and-framing-choices">Scope and Framing Choices</a>
+  <ul class="collapse">
+  <li><a href="#why-manhattan-only" id="toc-why-manhattan-only" class="nav-link" data-scroll-target="#why-manhattan-only">Why Manhattan Only?</a></li>
+  </ul></li>
+  <li><a href="#engagement-with-prior-literature" id="toc-engagement-with-prior-literature" class="nav-link" data-scroll-target="#engagement-with-prior-literature">Engagement with Prior Literature</a>
+  <ul class="collapse">
+  <li><a href="#protected-bike-lanes-and-ridership-2025" id="toc-protected-bike-lanes-and-ridership-2025" class="nav-link" data-scroll-target="#protected-bike-lanes-and-ridership-2025">Protected Bike Lanes and Ridership (2025)</a></li>
+  <li><a href="#urban-environment-and-visual-context-2024" id="toc-urban-environment-and-visual-context-2024" class="nav-link" data-scroll-target="#urban-environment-and-visual-context-2024">Urban Environment and Visual Context (2024)</a></li>
+  <li><a href="#weather-and-citi-bike-usage-2019" id="toc-weather-and-citi-bike-usage-2019" class="nav-link" data-scroll-target="#weather-and-citi-bike-usage-2019">Weather and Citi Bike Usage (2019)</a></li>
+  <li><a href="#how-this-project-extends-prior-work" id="toc-how-this-project-extends-prior-work" class="nav-link" data-scroll-target="#how-this-project-extends-prior-work">How This Project Extends Prior Work</a></li>
+  </ul></li>
+  <li><a href="#most-popular-routes-findings" id="toc-most-popular-routes-findings" class="nav-link" data-scroll-target="#most-popular-routes-findings">Most Popular Routes Findings</a></li>
+  <li><a href="#temperature-vs.-precipitation-findings" id="toc-temperature-vs.-precipitation-findings" class="nav-link" data-scroll-target="#temperature-vs.-precipitation-findings">Temperature vs.&nbsp;Precipitation Findings</a></li>
+  <li><a href="#members-vs.-casual-riders-findings" id="toc-members-vs.-casual-riders-findings" class="nav-link" data-scroll-target="#members-vs.-casual-riders-findings">Members vs.&nbsp;Casual Riders Findings</a></li>
+  <li><a href="#protected-vs.-shared-bike-lanes-findings" id="toc-protected-vs.-shared-bike-lanes-findings" class="nav-link" data-scroll-target="#protected-vs.-shared-bike-lanes-findings">Protected vs.&nbsp;Shared Bike Lanes Findings</a></li>
+  <li><a href="#time-of-day-and-day-of-week-findings" id="toc-time-of-day-and-day-of-week-findings" class="nav-link" data-scroll-target="#time-of-day-and-day-of-week-findings">Time of Day and Day of Week Findings</a></li>
+  <li><a href="#e-bike-vs.-classic-bike-usage-findings" id="toc-e-bike-vs.-classic-bike-usage-findings" class="nav-link" data-scroll-target="#e-bike-vs.-classic-bike-usage-findings">E-Bike vs.&nbsp;Classic Bike Usage Findings</a></li>
+  <li><a href="#integrated-findings" id="toc-integrated-findings" class="nav-link" data-scroll-target="#integrated-findings">Integrated Findings</a>
+  <ul class="collapse">
+  <li><a href="#weather" id="toc-weather" class="nav-link" data-scroll-target="#weather"><strong>1. Weather</strong></a></li>
+  <li><a href="#rider-type" id="toc-rider-type" class="nav-link" data-scroll-target="#rider-type"><strong>2. Rider Type</strong></a></li>
+  <li><a href="#time-patterns" id="toc-time-patterns" class="nav-link" data-scroll-target="#time-patterns"><strong>3. Time Patterns</strong></a></li>
+  <li><a href="#infrastructure" id="toc-infrastructure" class="nav-link" data-scroll-target="#infrastructure">4. <strong>Infrastructure</strong></a></li>
+  <li><a href="#routes" id="toc-routes" class="nav-link" data-scroll-target="#routes"><strong>5. Routes</strong></a></li>
+  <li><a href="#e-bike-share" id="toc-e-bike-share" class="nav-link" data-scroll-target="#e-bike-share">6. <strong>E-Bike Share</strong></a></li>
+  </ul></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a>
+  <ul class="collapse">
+  <li><a href="#expand-to-all-nyc-boroughs" id="toc-expand-to-all-nyc-boroughs" class="nav-link" data-scroll-target="#expand-to-all-nyc-boroughs">Expand to all NYC boroughs</a></li>
+  <li><a href="#study-route-level-behavior" id="toc-study-route-level-behavior" class="nav-link" data-scroll-target="#study-route-level-behavior">Study route-level behavior</a></li>
+  <li><a href="#examine-the-effects-of-pricing-and-membership-policies" id="toc-examine-the-effects-of-pricing-and-membership-policies" class="nav-link" data-scroll-target="#examine-the-effects-of-pricing-and-membership-policies">Examine the effects of pricing and membership policies</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -112,7 +187,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -332,18 +407,14 @@ Manhattan contains the highest density of Citi Bike stations, the greatest trip 
 </ul>
 <p><strong>Limitations:</strong></p>
 <ul>
-<li><p>E-bike availability and pricing vary by station and time, which is not modeled</p></li>
-<li><p>Battery constraints and rebalancing dynamics are not observed</p></li>
+<li>E-bike availability and pricing vary by station and time, which is not modeled</li>
 </ul>
 </section>
 <section id="integrated-findings" class="level2">
 <h2 class="anchored" data-anchor-id="integrated-findings">Integrated Findings</h2>
 <p>To combine the individual SQs into a single answer, we fit one joint random forest model predicting daily Citi Bike trip volume in Manhattan. Each SQ contributed a small set of daily features representing its key findings, and all SQs were included in the model at the same time.</p>
-<p>For the sake of brevity, all analysis code is available via this link.</p>
-<p>Model performance was evaluated out of sample using RMSE and R².<br>
-</p>
+<p>We will apply a leave-one-covariate-out (LOCO) approach to compare the predictive contributions of all the SQs. We begin with a model that includes all variables, then remove one variable at a time and examine how the model’s performance changes. If removing a variable causes a large drop in accuracy, that variable is considered more important for predicting daily ridership.</p>
 <p><img src="figures/loco_importance_table.png" class="img-fluid" width="805"></p>
-<p>The full model achieves an R² of approximately 0.44, meaning it explains about 44% of the day-to-day variation in Citi Bike ridership.</p>
 <section id="weather" class="level3">
 <h3 class="anchored" data-anchor-id="weather"><strong>1. Weather</strong></h3>
 <p>Removing weather variables causes the largest drop in performance:</p>

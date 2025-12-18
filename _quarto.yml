@@ -5,8 +5,20 @@ project:
 website:
   navbar:
     left:
-      - text: "Home"
+      - text: "Group Report"
         href: Home.qmd
+      - text: "SQ1: Most Popular Routes"
+        href: https://starnovalight.github.io/STA9750-2025-FALL/pop00.html
+      - text: "SQ2: Temperature vs. Precipitation"
+        href: https://thecyclepaths.netlify.app/sq2.html
+      - text: "SQ3: Members vs. Casual Riders"
+        href: https://jiminhong123.github.io/STA9750-2025-FALL/Individual_report.html
+      - text: "SQ4: Protected vs. Shared Bike Lanes"
+      - text: "SQ5: Time of Day & Day of Week"
+        href: https://karenn-dotcom.github.io/STA9750-2025-FALL/ind_rep.html
+      - text: "SQ6: E-Bike vs. Classic Bike"
+        href: https://sabrinazhuu.github.io/STA9750-2025-FALL/individual_report.html
+        
         
   #page-footer:
     #right:

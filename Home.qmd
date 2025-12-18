@@ -2,7 +2,8 @@
 title: "Pedals, Pavement, and Patterns: Citi Bike in Manhattan"
 format: 
   html: 
-    toc: false
+    toc: true
+    page-layout: full
 author: The Cycle Paths
 ---
 
@@ -242,19 +243,13 @@ Lastly, this study shows that temperature and precipitation strongly influence C
 
 -   E-bike availability and pricing vary by station and time, which is not modeled
 
--   Battery constraints and rebalancing dynamics are not observed
-
 ## Integrated Findings
 
 To combine the individual SQs into a single answer, we fit one joint random forest model predicting daily Citi Bike trip volume in Manhattan. Each SQ contributed a small set of daily features representing its key findings, and all SQs were included in the model at the same time.
 
-For the sake of brevity, all analysis code is available via this link.
-
-Model performance was evaluated out of sample using RMSE and R².\
+We will apply a leave-one-covariate-out (LOCO) approach to compare the predictive contributions of all the SQs. We begin with a model that includes all variables, then remove one variable at a time and examine how the model’s performance changes. If removing a variable causes a large drop in accuracy, that variable is considered more important for predicting daily ridership.
 
 ![](figures/loco_importance_table.png){width="805"}
-
-The full model achieves an R² of approximately 0.44, meaning it explains about 44% of the day-to-day variation in Citi Bike ridership.
 
 ### **1. Weather**
 
@@ -280,19 +275,19 @@ This shows that the mix of rider types strongly affects demand, capturing differ
 
 Removing time-based features (commute-hour share and weekend share) results in:
 
--    **RMSE increase of 709 trips**
+-   **RMSE increase of 709 trips**
 
--    **R² decrease of 0.058**
+-   **R² decrease of 0.058**
 
 Time patterns clearly matter, but their contribution is smaller once weather and rider type are already included in the model.
 
-### 4. **Infrastructure** 
+### 4. **Infrastructure**
 
 Dropping infrastructure variables produces:
 
--    **RMSE increase of 346 trips**
+-   **RMSE increase of 346 trips**
 
--    **R² decrease of 0.028**
+-   **R² decrease of 0.028**
 
 This indicates that proximity to protected bike lanes is associated with higher ridership, but show relatively modest impact compared to behavioral and enivornmental factors.
 

@@ -2,9 +2,13 @@
 title: "Effects of Temperature and Precipitation on Bike Ridership"
 format: 
   html: 
-    toc: false
+    toc: true
     page-layout: full
+    code-tools: true
+    code-fold: true
+    code-summary: "Code"
 author: Christopher Tan
+publish-date: 2025-12-18
 execute: 
   freeze: auto
 ---
@@ -648,9 +652,7 @@ We evaluate model performance using two standard metrics:
 
 -   RMSE (Root Mean Squared Error) measures the typical size of the model’s prediction error, expressed in number of trips per day. A lower RMSE means the model’s predictions are closer to the actual observed ridership.
 
-<!-- -->
-
--    R² (R-squared) measures how much of the day-to-day variation in Citi Bike ridership the model can explain. Higher R² values indicate that the model captures more of the underlying pattern in the data.
+-   R² (R-squared) measures how much of the day-to-day variation in Citi Bike ridership the model can explain. Higher R² values indicate that the model captures more of the underlying pattern in the data.
 
 ### 1. Load Datasets
 
@@ -741,7 +743,7 @@ score_model <- function(train_dt, test_dt, drop_cols = character()) {
 }
 ```
 
-### 7. Baseline model 
+### 7. Baseline model
 
 We first fit a baseline random forest model that includes both temperature and precipitation. The RMSE and R² from this full model serve as reference benchmarks for evaluating the impact of removing each weather variable in the LOCO analysis.
 
@@ -757,7 +759,7 @@ cat("R^2 :", round(base$r2, 3), "\n")
 
 We apply the leave-one-covariate-out (LOCO) procedure by refitting the model twice:
 
--    **Remove temperature:** the model is trained using precipitation only.
+-   **Remove temperature:** the model is trained using precipitation only.
 
 -   **Remove precipitation:** the model is trained using temperature only
 
