@@ -145,6 +145,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="specific-questions-sqs" class="level2">
 <h2 class="anchored" data-anchor-id="specific-questions-sqs">Specific Questions (SQs)</h2>
+<p>To better answer our OQ, we will analyze the following SQs:</p>
 <section id="what-are-the-most-popular-bike-routes-and-resting-stops" class="level3">
 <h3 class="anchored" data-anchor-id="what-are-the-most-popular-bike-routes-and-resting-stops">What are the most popular bike routes and resting stops?</h3>
 <p>This question identifies where Citi Bike trips most often begin, end, and connect. By examining popular routes and high-traffic stations, we can see how riders move through Manhattan and which locations consistently experience high demand.</p>
@@ -170,101 +171,11 @@ ul.task-list li input[type="checkbox"] {
 <p>Different types of infrastructure may influence the choice between e-bikes and classic bikes. This SQ explores whether proximity to certain lane types or station characteristics is associated with higher e-bike usage compared to classic bikes.</p>
 </section>
 </section>
-<section id="citi-bike-trip-data" class="level2">
-<h2 class="anchored" data-anchor-id="citi-bike-trip-data">Citi Bike Trip Data</h2>
-<p><strong>Source:</strong> Citi Bike Records</p>
-<p>Citi Bike trip data form the backbone of this analysis, providing a comprehensive record of bike-share usage across Manhattan. Each trip record includes a start time, start location, rider type, and bike type, allowing us to study when, where, and how riders use the system.</p>
-<section id="time-resolution" class="level3">
-<h3 class="anchored" data-anchor-id="time-resolution">Time Resolution</h3>
-<ul>
-<li>Daily aggregation was used when analyzing weather effects, since temperature and precipitation vary meaningfully from day to day.</li>
-<li>Hourly aggregation was used for time-of-day and day-of-week analyses to capture commute peaks and daily usage cycles.</li>
-</ul>
-</section>
-<section id="trip-inclusion-rules" class="level3">
-<h3 class="anchored" data-anchor-id="trip-inclusion-rules">Trip Inclusion Rules</h3>
-<ul>
-<li>Only trips <strong>starting in Manhattan</strong> were included.</li>
-<li>Trips ending outside Manhattan were kept, since riders make their rental decision at the starting station.</li>
-<li>Trips with missing start coordinates were removed.</li>
-</ul>
-</section>
-<section id="rider-types" class="level3">
-<h3 class="anchored" data-anchor-id="rider-types">Rider Types</h3>
-<p>The analysis distinguishes between:</p>
-<ul>
-<li>Member vs.&nbsp;casual riders</li>
-<li>E-bike vs.&nbsp;classic bike trips</li>
-</ul>
-</section>
-<section id="station-level-aggregation" class="level3">
-<h3 class="anchored" data-anchor-id="station-level-aggregation">Station-Level Aggregation</h3>
-<p>For infrastructure-related analyses, trips were aggregated to the <strong>station-day level</strong>, allowing direct comparison across stations with different nearby lane types.</p>
-</section>
-<section id="limitations" class="level3">
-<h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
-<ul>
-<li>Station demand may reflect access to multiple nearby routes, not just the closest bike lane.</li>
-<li>Trip counts capture observed usage, not unmet demand (for example, when bikes or docks are unavailable).</li>
-</ul>
-</section>
-</section>
-<section id="weather-data" class="level2">
-<h2 class="anchored" data-anchor-id="weather-data">Weather Data</h2>
-<p><strong>Source:</strong> Open-Meteo API</p>
-<section id="variables-used" class="level3">
-<h3 class="anchored" data-anchor-id="variables-used">Variables Used</h3>
-<ul>
-<li>Daily mean temperature (°F)</li>
-<li>Daily precipitation (inches)</li>
-</ul>
-</section>
-<section id="spatial-representation" class="level3">
-<h3 class="anchored" data-anchor-id="spatial-representation">Spatial Representation</h3>
-<p>Weather conditions were measured using a single fixed reference point in Midtown Manhattan. Given Manhattan’s geography, this was treated as a reasonable approximation of weather conditions.</p>
-</section>
-<section id="precipitation-categories" class="level3">
-<h3 class="anchored" data-anchor-id="precipitation-categories">Precipitation Categories</h3>
-<ul>
-<li><strong>None:</strong> 0 inches</li>
-<li><strong>Light:</strong> ≤ 0.10 inches</li>
-<li><strong>Moderate:</strong> ≤ 0.30 inches</li>
-<li><strong>Heavy:</strong> &gt; 0.30 inches</li>
-</ul>
-</section>
-<section id="limitations-1" class="level3">
-<h3 class="anchored" data-anchor-id="limitations-1">Limitations</h3>
-<ul>
-<li>Weather may vary slightly across neighborhoods, which is not captured by a single reference point.</li>
-<li>Short-duration or extreme weather events within a day may be averaged out in daily data.</li>
-</ul>
-</section>
-</section>
-<section id="bike-lane-infrastructure-data" class="level2">
-<h2 class="anchored" data-anchor-id="bike-lane-infrastructure-data">Bike Lane Infrastructure Data</h2>
-<p><strong>Source:</strong> NYC DOT Bike Routes</p>
-<p>Bike lane data were used to examine whether station demand differs based on nearby cycling infrastructure.</p>
-<section id="lane-classification" class="level3">
-<h3 class="anchored" data-anchor-id="lane-classification">Lane Classification</h3>
-<p>Bike lanes were grouped into two broad categories:</p>
-<ul>
-<li>Protected lanes</li>
-<li>Shared lanes</li>
-</ul>
-</section>
-<section id="establishing-proximity" class="level3">
-<h3 class="anchored" data-anchor-id="establishing-proximity">Establishing Proximity</h3>
-<p>A station was considered near a lane if it was within <strong>100 meters</strong> of that lane type.</p>
-<p>Stations that were equidistant to both protected and shared lanes were removed to avoid ambiguous classification.</p>
-</section>
-<section id="limitations-2" class="level3">
-<h3 class="anchored" data-anchor-id="limitations-2">Limitations</h3>
-<ul>
-<li>Riders may not always use the nearest bike lane</li>
-<li>Stations may serve riders accessing multiple nearby lanes</li>
-<li>Infrastructure data may not perfectly reflect real-world conditions at every point in time</li>
-</ul>
-</section>
+<section id="data-sources-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources-and-limitations">Data Sources and Limitations</h2>
+<p><strong>Citi Bike trip data (NYC)</strong> provide detailed information on when and where trips begin, along with rider type and bike type. These data allow us to examine daily and hourly ridership patterns and compare usage across stations. To focus on rider decision-making, only trips starting in Manhattan were included. However, trip counts reflect only observed usage and cannot capture unmet demand, such as situations when bikes or docks were unavailable. In addition, station demand may be influenced by multiple nearby routes rather than a single location.</p>
+<p><strong>Weather data from Open-Meteo</strong> include daily mean temperature and precipitation. Weather was measured at a single reference point in Manhattan, which is reasonable given the borough’s size. Still, this approach cannot capture small neighborhood differences or short weather events within a day, which may affect riding behavior. Daily averages can also smooth over brief weather events, such as short heavy rain or heat spikes, that may still influence rider behavior.</p>
+<p><strong>Bike lane data from NYC DOT</strong> were used to classify stations based on nearby cycling infrastructure, distinguishing between protected and shared lanes. Proximity was defined using a fixed distance threshold, which provides a consistent rule but does not guarantee that riders actually use the nearest lane. Infrastructure conditions may also change over time in ways not fully reflected in the dataset.</p>
 </section>
 <section id="scope-and-framing-choices" class="level2">
 <h2 class="anchored" data-anchor-id="scope-and-framing-choices">Scope and Framing Choices</h2>
@@ -279,33 +190,23 @@ ul.task-list li input[type="checkbox"] {
 <li>Keeps computation feasible while maintaining analytic depth</li>
 </ul>
 </section>
-<section id="what-was-not-modeled" class="level3">
-<h3 class="anchored" data-anchor-id="what-was-not-modeled">What Was Not Modeled</h3>
-<ul>
-<li>Pricing changes</li>
-<li>Bike rebalancing operations or service outages</li>
-<li>Holidays and special events</li>
-<li>Subway disruptions</li>
-<li>Long-term growth or trend effects</li>
-</ul>
-</section>
 </section>
 <section id="engagement-with-prior-literature" class="level2">
 <h2 class="anchored" data-anchor-id="engagement-with-prior-literature">Engagement with Prior Literature</h2>
 <section id="protected-bike-lanes-and-ridership-2025" class="level3">
 <h3 class="anchored" data-anchor-id="protected-bike-lanes-and-ridership-2025">Protected Bike Lanes and Ridership (2025)</h3>
 <p><em>Effect of Protected Bike Lanes on Bike-Sharing Ridership</em></p>
-<p>This study examines whether protected bike lanes lead to increased Citi Bike usage. Using a causal research design and several years of system-wide data, the authors find that ridership increases after protected lanes are installed. Their results provide strong evidence that safer infrastructure can encourage more people to use bike-share systems. However, the analysis focuses on overall ridership changes rather than how usage varies at individual stations. The study also does not incorporate weather conditions, making it difficult to separate the effects of infrastructure from environmental factors. As a result, while the findings support the importance of protected lanes, they leave open questions about how these effects play out in dense areas like Manhattan at a more detailed spatial level.</p>
+<p>First, study looks at whether adding protected bike lanes increases Citi Bike use. Using several years of citywide data, the authors find that ridership rises after protected lanes are installed. This suggests that safer bike infrastructure encourages more people to ride. However, the study focuses on overall system trends and does not examine differences at individual stations. It also does not include weather data, which makes it harder to separate the effect of infrastructure from daily conditions. As a result, it is unclear how these effects vary within dense areas like Manhattan.</p>
 </section>
 <section id="urban-environment-and-visual-context-2024" class="level3">
 <h3 class="anchored" data-anchor-id="urban-environment-and-visual-context-2024">Urban Environment and Visual Context (2024)</h3>
 <p><em>Deciphering Urban Bike-Sharing Patterns</em></p>
-<p>This next study takes a different approach by examining how natural environment features and visual street characteristics relate to Citi Bike usage. The authors analyze how factors such as visibility, traffic-related visual elements, and urban form influence ridership patterns. Their results suggest that aspects of the surrounding environment, particularly those associated with motorized traffic, are negatively related to cycling activity. The study provides valuable insight into how the built environment shapes rider behavior, but it does not consider proximity to specific bike-lane types, such as protected versus shared lanes.</p>
+<p>Next, this study examines how features of the surrounding urban environment relate to Citi Bike usage. It finds that visual elements linked to traffic and busy streets are associated with lower ridership, while more bike friendly environments support higher use. While this work helps explain how street design affects cycling behavior, it does not distinguish between different types of bike lanes, such as protected versus shared lanes. It also does not directly connect environmental features to station level demand.</p>
 </section>
 <section id="weather-and-citi-bike-usage-2019" class="level3">
 <h3 class="anchored" data-anchor-id="weather-and-citi-bike-usage-2019">Weather and Citi Bike Usage (2019)</h3>
 <p><em>Weather and Cycling in New York: The Case of Citi Bike</em></p>
-<p>Finally, this study talks about how temperature and precipitation have a strong influence on ridership, even after accounting for factors such as infrastructure and calendar effects. The authors find that weather explains a substantial share of day-to-day variation in Citi Bike usage, often more than infrastructure or location alone. While this study highlights the importance of environmental conditions, it relies on older data predating system expansions and does not examine how weather interacts with station-level context or lane proximity.</p>
+<p>Lastly, his study shows that temperature and precipitation have a strong effect on Citi Bike ridership. Warmer and drier days see higher usage, while rain and cold reduce demand. The authors find that weather explains much of the day to day variation in trips, often more than infrastructure alone. However, the study uses older data from before recent system expansion. It also does not explore how weather effects differ across locations or interact with nearby bike lane infrastructure.</p>
 </section>
 <section id="how-this-project-extends-prior-work" class="level3">
 <h3 class="anchored" data-anchor-id="how-this-project-extends-prior-work">How This Project Extends Prior Work</h3>
@@ -333,8 +234,6 @@ Manhattan contains the highest density of Citi Bike stations, the greatest trip 
 <li><p>High volumes may reflect station density and placement rather than rider preference for a specific location</p></li>
 <li><p>Start–end data do not capture the actual path taken, limiting inference about street-level route choice</p></li>
 </ul>
-<p><strong>Implication:</strong><br>
-Spatial results identify <em>where</em> demand concentrates, but not definitive evidence of preferred riding paths or infrastructure quality.</p>
 </section>
 <section id="temperature-vs.-precipitation-findings" class="level2">
 <h2 class="anchored" data-anchor-id="temperature-vs.-precipitation-findings">Temperature vs.&nbsp;Precipitation Findings</h2>
@@ -344,12 +243,14 @@ Spatial results identify <em>where</em> demand concentrates, but not definitive 
 <ul>
 <li><p>Temperature is the main weather driver of Citi Bike demand</p></li>
 <li><p>The GAM curve shows a strong non-linear increase in trips between roughly <strong>40°F and 70°F</strong>, followed by a plateau, indicating diminishing gains from additional warmth</p></li>
-<li><p>Precipitation suppresses demand, but less sharply than temperature:</p></li>
+<li><p>Precipitation suppresses demand, but less sharply than temperature:</p>
+<ul>
 <li><p>Median trips consistently decrease from <em>None</em> → <em>Heavy</em> rain</p></li>
 <li><p>Light rain days show comparable or slightly higher medians than dry days, suggesting commuter tolerance for mild precipitation</p></li>
 <li><p>Heavy rain compresses both median and upper-quartile usage</p></li>
+</ul></li>
 </ul>
-<p><strong>Limitations &amp; uncertainty:</strong></p>
+<p><strong>Limitations:</strong></p>
 <ul>
 <li><p>Daily aggregation averages out short, intense rain events that may strongly affect specific hours</p></li>
 <li><p>Weather effects are correlated with seasonality, complicating causal separation without additional controls</p></li>
@@ -411,7 +312,7 @@ Spatial results identify <em>where</em> demand concentrates, but not definitive 
 <ul>
 <li><p>Hourly aggregation masks station-level congestion effects</p></li>
 <li><p>Holidays and special events are not explicitly modeled</p></li>
-<li><p>Time patterns interact with weather but are analyzed separately.</p></li>
+<li><p>Time patterns interact with weather but are analyzed separately</p></li>
 </ul>
 </section>
 <section id="e-bike-vs.-classic-bike-usage-findings" class="level2">
@@ -435,6 +336,9 @@ Spatial results identify <em>where</em> demand concentrates, but not definitive 
 <li><p>E-bike availability and pricing vary by station and time, which is not modeled</p></li>
 <li><p>Battery constraints and rebalancing dynamics are not observed</p></li>
 </ul>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
 
 
 </section>
