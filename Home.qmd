@@ -1,3 +1,12 @@
+---
+title: "Pedals, Pavement, and Patterns: Citi Bike in Manhattan"
+format: 
+  html: 
+    toc: false
+author: The Cycle Paths
+
+---
+
 ## Overarching Question (OQ)
 
 **How do weather, time, location, bike lane infrastructure, and rider type affect Citi Bike trip volume in Manhattan?**
