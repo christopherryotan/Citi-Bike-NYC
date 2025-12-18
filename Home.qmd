@@ -4,7 +4,6 @@ format:
   html: 
     toc: false
 author: The Cycle Paths
-
 ---
 
 ## Overarching Question (OQ)
@@ -229,9 +228,6 @@ Spatial results identify *where* demand concentrates, but not definitive evidenc
 
 -   Weather effects are correlated with seasonality, complicating causal separation without additional controls
 
-**Implication:**\
-Weather sets baseline demand levels, acting as a modifier rather than a sole determinant of ridership.
-
 ## Members vs. Casual Riders Findings
 
 ![](images/SQ3-1.png)
@@ -253,9 +249,6 @@ Weather sets baseline demand levels, acting as a modifier rather than a sole det
 -   Rider type does not directly observe trip purpose
 
 -   Changes in membership composition over time are not separately identified
-
-**Implication:**\
-Rider type explains *who* drives demand patterns, but not individual decision-making motives.
 
 ## Protected vs. Shared Bike Lanes Findings
 
@@ -283,9 +276,6 @@ Rider type explains *who* drives demand patterns, but not individual decision-ma
 
 -   Lane data may not reflect temporary disruptions (e.g., construction)
 
-**Implication:**\
-Infrastructure strongly shapes *where* demand concentrates, but causal claims require more rigorous designs.
-
 ## Time of Day and Day of Week Findings
 
 ![](images/SQ5.png)
@@ -311,9 +301,6 @@ Infrastructure strongly shapes *where* demand concentrates, but causal claims re
 -   Holidays and special events are not explicitly modeled
 
 -   Time patterns interact with weather but are analyzed separately.
-
-**Implication:**\
-Time variables establish the structural rhythm of demand, onto which other factors act.
 
 ## E-Bike vs. Classic Bike Usage Findings
 
@@ -342,6 +329,3 @@ Time variables establish the structural rhythm of demand, onto which other facto
 -   E-bike availability and pricing vary by station and time, which is not modeled
 
 -   Battery constraints and rebalancing dynamics are not observed
-
-**Implication:**\
-Technology choice amplifies existing demand patterns, modifying how riders respond to fatigue and infrastructure rather than replacing core behaviors.
