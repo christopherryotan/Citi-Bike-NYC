@@ -133,14 +133,14 @@ ul.task-list li input[type="checkbox"] {
 <section id="overarching-question-oq" class="level2">
 <h2 class="anchored" data-anchor-id="overarching-question-oq">Overarching Question (OQ)</h2>
 <p><strong>How do weather, time, location, bike lane infrastructure, and rider type affect Citi Bike trip volume in Manhattan?</strong></p>
-<p>Citi Bike is part of everyday transportation in Manhattan. Riders use the system for commuting, short errands, recreation, and tourism. Because of this, ridership changes throughout the day, across seasons, and from one neighborhood to another. Understanding what drives these changes is useful for both planning and daily operations.</p>
+<p>Citi Bike is a core part of everyday transportation in Manhattan, used for commuting, errands, recreation, and tourism. As a result, ridership varies across time, seasons, and neighborhoods. Understanding what drives these changes is useful for both planning and daily operations.</p>
 <p>The OQ focuses on how several important factors work together to shape Citi Bike demand. No single factor explains the full pattern of ridership on its own. By studying each factor separately and then connecting them, we can better understand how the system behaves under different conditions.</p>
 <p><strong>Key motivations for this question include:</strong></p>
 <ul>
 <li>Helping planners understand when and where new bike lanes may have the greatest impact</li>
 <li>Supporting Citi Bike operations by identifying predictable rush periods</li>
 <li>Showing how weather shifts overall demand levels</li>
-<li>Giving the public a clear explanation of what shapes bike availability</li>
+<li>Clearly explain what shapes bike availability</li>
 </ul>
 </section>
 <section id="specific-questions-sqs" class="level2">
@@ -181,12 +181,11 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="scope-and-framing-choices">Scope and Framing Choices</h2>
 <section id="why-manhattan-only" class="level3">
 <h3 class="anchored" data-anchor-id="why-manhattan-only">Why Manhattan Only?</h3>
-<p>The analysis focuses exclusively on Manhattan because it:</p>
 <ul>
 <li>Has the highest station density and trip volume</li>
 <li>Contains variation in bike lane infrastructure within a compact area</li>
-<li>Avoids noise from suburban or low-density regions</li>
-<li>Improves interpretability for planners and policymakers</li>
+<li>Avoids noise from low-density regions</li>
+<li>Improves interpretability for policymakers</li>
 <li>Keeps computation feasible while maintaining analytic depth</li>
 </ul>
 </section>
@@ -196,17 +195,17 @@ ul.task-list li input[type="checkbox"] {
 <section id="protected-bike-lanes-and-ridership-2025" class="level3">
 <h3 class="anchored" data-anchor-id="protected-bike-lanes-and-ridership-2025">Protected Bike Lanes and Ridership (2025)</h3>
 <p><em>Effect of Protected Bike Lanes on Bike-Sharing Ridership</em></p>
-<p>First, study looks at whether adding protected bike lanes increases Citi Bike use. Using several years of citywide data, the authors find that ridership rises after protected lanes are installed. This suggests that safer bike infrastructure encourages more people to ride. However, the study focuses on overall system trends and does not examine differences at individual stations. It also does not include weather data, which makes it harder to separate the effect of infrastructure from daily conditions. As a result, it is unclear how these effects vary within dense areas like Manhattan.</p>
+<p>First, study looks at whether adding protected bike lanes increases Citi Bike use. Using several years of citywide data, the authors find that ridership rises after protected lanes are installed. This suggests that safer bike infrastructure encourages more people to ride. However, the study focuses on overall system trends and does not examine differences at individual stations. It also does not include weather data, which makes it harder to separate the effect of infrastructure from daily conditions. As a result, station-level effects in dense areas like Manhattan remain unclear.</p>
 </section>
 <section id="urban-environment-and-visual-context-2024" class="level3">
 <h3 class="anchored" data-anchor-id="urban-environment-and-visual-context-2024">Urban Environment and Visual Context (2024)</h3>
 <p><em>Deciphering Urban Bike-Sharing Patterns</em></p>
-<p>Next, this study examines how features of the surrounding urban environment relate to Citi Bike usage. It finds that visual elements linked to traffic and busy streets are associated with lower ridership, while more bike friendly environments support higher use. While this work helps explain how street design affects cycling behavior, it does not distinguish between different types of bike lanes, such as protected versus shared lanes. It also does not directly connect environmental features to station level demand.</p>
+<p>Next, this study examines how features of the surrounding urban environment relate to Citi Bike usage. It finds that traffic-heavy and congested streets are associated with lower ridership, while more bike-friendly environments support higher use. While informative, the study does not distinguish between protected and shared bike lanes.</p>
 </section>
 <section id="weather-and-citi-bike-usage-2019" class="level3">
 <h3 class="anchored" data-anchor-id="weather-and-citi-bike-usage-2019">Weather and Citi Bike Usage (2019)</h3>
 <p><em>Weather and Cycling in New York: The Case of Citi Bike</em></p>
-<p>Lastly, his study shows that temperature and precipitation have a strong effect on Citi Bike ridership. Warmer and drier days see higher usage, while rain and cold reduce demand. The authors find that weather explains much of the day to day variation in trips, often more than infrastructure alone. However, the study uses older data from before recent system expansion. It also does not explore how weather effects differ across locations or interact with nearby bike lane infrastructure.</p>
+<p>Lastly, this study shows that temperature and precipitation strongly influence Citi Bike ridership. Warmer, drier days see higher usage, while rain and cold reduce demand. However, the study relies on older data prior to recent system expansion and does not examine how weather interacts with station location or nearby bike lanes.</p>
 </section>
 <section id="how-this-project-extends-prior-work" class="level3">
 <h3 class="anchored" data-anchor-id="how-this-project-extends-prior-work">How This Project Extends Prior Work</h3>
@@ -337,10 +336,85 @@ Manhattan contains the highest density of Citi Bike stations, the greatest trip 
 <li><p>Battery constraints and rebalancing dynamics are not observed</p></li>
 </ul>
 </section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section"></h2>
+<section id="integrated-findings" class="level2">
+<h2 class="anchored" data-anchor-id="integrated-findings">Integrated Findings</h2>
+<p>To combine the individual SQs into a single answer, we fit one joint random forest model predicting daily Citi Bike trip volume in Manhattan. Each SQ contributed a small set of daily features representing its key findings, and all SQs were included in the model at the same time.</p>
+<p>For the sake of brevity, all analysis code is available via this link.</p>
+<p>Model performance was evaluated out of sample using RMSE and R².<br>
+</p>
+<p><img src="figures/loco_importance_table.png" class="img-fluid" width="805"></p>
+<p>The full model achieves an R² of approximately 0.44, meaning it explains about 44% of the day-to-day variation in Citi Bike ridership.</p>
+<section id="weather" class="level3">
+<h3 class="anchored" data-anchor-id="weather"><strong>1. Weather</strong></h3>
+<p>Removing weather variables causes the largest drop in performance:</p>
+<ul>
+<li><p><strong>RMSE increases by 2,145 trips</strong></p></li>
+<li><p><strong>R² decreases by 0.186</strong></p></li>
+</ul>
+<p>This means weather alone accounts for nearly 19% of explained variance, making it the most important factor in determining daily Citi Bike demand.</p>
+</section>
+<section id="rider-type" class="level3">
+<h3 class="anchored" data-anchor-id="rider-type"><strong>2. Rider Type</strong></h3>
+<p>Excluding rider composition (member vs.&nbsp;casual share) leads to:</p>
+<ul>
+<li><p><strong>RMSE increase of 952 trips</strong></p></li>
+<li><p><strong>R² decrease of 0.079</strong></p></li>
+</ul>
+<p>This shows that the mix of rider types strongly affects demand, capturing differences between commuting-driven and leisure-driven usage that are not explained by weather alone.</p>
+</section>
+<section id="time-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="time-patterns"><strong>3. Time Patterns</strong></h3>
+<p>Removing time-based features (commute-hour share and weekend share) results in:</p>
+<ul>
+<li><p><strong>RMSE increase of 709 trips</strong></p></li>
+<li><p><strong>R² decrease of 0.058</strong></p></li>
+</ul>
+<p>Time patterns clearly matter, but their contribution is smaller once weather and rider type are already included in the model.</p>
+</section>
+<section id="infrastructure" class="level3">
+<h3 class="anchored" data-anchor-id="infrastructure">4. <strong>Infrastructure</strong></h3>
+<p>Dropping infrastructure variables produces:</p>
+<ul>
+<li><p><strong>RMSE increase of 346 trips</strong></p></li>
+<li><p><strong>R² decrease of 0.028</strong></p></li>
+</ul>
+<p>This indicates that proximity to protected bike lanes is associated with higher ridership, but show relatively modest impact compared to behavioral and enivornmental factors.</p>
+</section>
+<section id="routes" class="level3">
+<h3 class="anchored" data-anchor-id="routes"><strong>5. Routes</strong></h3>
+<p>Removing route concentration measures leads to:</p>
+<ul>
+<li><p><strong>RMSE increase of 332 trips</strong></p></li>
+<li><p><strong>R² decrease of 0.027</strong></p></li>
+</ul>
+<p>This effect is nearly identical to infrastructure. Route patterns influence where trips occur, but add little explanatory power for daily demand once other factors are controlled for.</p>
+</section>
+<section id="e-bike-share" class="level3">
+<h3 class="anchored" data-anchor-id="e-bike-share">6. <strong>E-Bike Share</strong></h3>
+<p>Removing e-bike share would actually <strong>improve</strong> model performance:</p>
+<ul>
+<li><p><strong>RMSE decreases by 307 trips</strong></p></li>
+<li><p><strong>R² increases by 0.024</strong></p></li>
+</ul>
+<p>This suggests that e-bike usage does not independently explain daily demand and is largely driven by the same factors as overall ridership.</p>
+</section>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
+<section id="expand-to-all-nyc-boroughs" class="level3">
+<h3 class="anchored" data-anchor-id="expand-to-all-nyc-boroughs">Expand to all NYC boroughs</h3>
+<p>This study focuses on Manhattan, where Citi Bike usage is highest and infrastructure is densest. Extending the analysis to other boroughs would allow direct comparison of how weather, rider type, and bike-lane infrastructure affect ridership in areas with different street layouts and transit alternatives.</p>
+</section>
+<section id="study-route-level-behavior" class="level3">
+<h3 class="anchored" data-anchor-id="study-route-level-behavior">Study route-level behavior</h3>
+<p>Rather than focusing only on trips starting at each station, future work could examine the actual routes riders take. This would help determine whether riders actively choose protected bike lanes over shared streets and how infrastructure shapes real travel paths, not just where trips begin.</p>
+</section>
+<section id="examine-the-effects-of-pricing-and-membership-policies" class="level3">
+<h3 class="anchored" data-anchor-id="examine-the-effects-of-pricing-and-membership-policies">Examine the effects of pricing and membership policies</h3>
+<p>Future analysis could evaluate how changes in pricing plans or e-bike fees influence rider behavior. Comparing responses across members and casual riders would clarify whether policy affects who rides, how often they ride, and under what conditions.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
