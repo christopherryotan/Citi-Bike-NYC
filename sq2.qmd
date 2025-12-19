@@ -614,6 +614,203 @@ htmltools::tags$iframe(
 )
 ```
 
+Below is the code that was launched from the ShinyApps application:
+
+```{r}
+#| message: false
+#| warning: false
+#| eval: false
+library(shiny)
+library(data.table)
+library(ggplot2)
+library(plotly)
+library(mgcv)
+library(viridis)
+library(scales)
+
+RDS_PATH <- "daily_trips_weather_202410_202510.rds"
+
+ui <- fluidPage(
+  titlePanel("Weather Dashboard: Manhattan Citi Bike Demand"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      dateRangeInput("date_rng", "Date range"),
+      
+      sliderInput(
+        "temp_rng", "Temperature range (°F)",
+        min = 0, max = 100, value = c(0, 100)
+      ),
+      
+      checkboxGroupInput(
+        "rain_sel", "Rain categories",
+        choices  = c("None", "Light", "Moderate", "Heavy"),
+        selected = c("None", "Light", "Moderate", "Heavy")
+      ),
+      
+      sliderInput("k_smooth", "GAM smoothness (k)", min = 6, max = 30, value = 12, step = 1),
+      
+      numericInput("y_max", "Y-axis max (trips)", value = 140000, min = 20000, step = 5000),
+      
+      hr(),
+      
+      downloadButton("dl_data", "Download filtered data (CSV)"),
+      downloadButton("dl_temp_plot", "Download temp plot (PNG)"),
+      downloadButton("dl_rain_plot", "Download rain plot (PNG)")
+    ),
+    
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Temp vs Trips", plotlyOutput("temp_plot", height = "520px")),
+        tabPanel("Trips by Rain", plotlyOutput("rain_plot", height = "520px"))
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  
+  daily <- reactiveVal(NULL)
+  temp_limits <- reactiveVal(NULL)
+  
+  observeEvent(TRUE, {
+    # fail loudly in logs if file is missing on shinyapps.io
+    stopifnot(file.exists(RDS_PATH))
+    
+    d <- readRDS(RDS_PATH)
+    setDT(d)
+    
+    if (!inherits(d$date, "Date")) d[, date := as.Date(date)]
+    
+    d[, rain_cat := fifelse(
+      is.na(precip_in), NA_character_,
+      fifelse(precip_in == 0, "None",
+              fifelse(precip_in <= 0.10, "Light",
+                      fifelse(precip_in <= 0.30, "Moderate", "Heavy")
+              )
+      )
+    )]
+    d[, rain_cat := factor(rain_cat, levels = c("None", "Light", "Moderate", "Heavy"))]
+    
+    daily(d)
+    temp_limits(range(d$temp_mean_F, na.rm = TRUE))
+    
+    # update UI widgets once data is ready
+    updateDateRangeInput(
+      session, "date_rng",
+      start = min(d$date, na.rm = TRUE),
+      end   = max(d$date, na.rm = TRUE),
+      min   = min(d$date, na.rm = TRUE),
+      max   = max(d$date, na.rm = TRUE)
+    )
+    
+    updateSliderInput(
+      session, "temp_rng",
+      min = floor(min(d$temp_mean_F, na.rm = TRUE)),
+      max = ceiling(max(d$temp_mean_F, na.rm = TRUE)),
+      value = c(
+        floor(min(d$temp_mean_F, na.rm = TRUE)),
+        ceiling(max(d$temp_mean_F, na.rm = TRUE))
+      )
+    )
+  }, once = TRUE)
+  
+  filtered <- reactive({
+    d <- daily()
+    req(d, input$date_rng, input$temp_rng, input$rain_sel)
+    
+    d <- d[!is.na(n_trips) & !is.na(temp_mean_F) & !is.na(rain_cat)]
+    d <- d[date >= input$date_rng[1] & date <= input$date_rng[2]]
+    d <- d[temp_mean_F >= input$temp_rng[1] & temp_mean_F <= input$temp_rng[2]]
+    d <- d[rain_cat %in% input$rain_sel]
+    d
+  })
+  
+  temp_gg <- reactive({
+    d <- filtered()
+    lims <- temp_limits()
+    req(lims)
+    
+    n_uniq <- uniqueN(d$temp_mean_F)
+    req(nrow(d) >= 10, n_uniq >= 5)
+    k_use <- min(input$k_smooth, n_uniq - 1)
+    
+    ggplot(d, aes(x = temp_mean_F, y = n_trips, color = temp_mean_F)) +
+      geom_point(alpha = 0.7, size = 2) +
+      geom_smooth(
+        method  = "gam",
+        formula = y ~ s(x, k = k_use),
+        se      = TRUE,
+        color   = "black",
+        fill    = "gray85",
+        linewidth = 1,
+        alpha   = 0.3
+      ) +
+      scale_color_viridis_c(
+        option = "plasma",
+        limits = lims,
+        oob    = scales::squish,
+        name   = "Temperature (°F)"
+      ) +
+      scale_y_continuous(labels = scales::comma, limits = c(0, input$y_max)) +
+      labs(
+        title = "Daily Trips vs Mean Temperature",
+        x     = "Mean Temperature (°F)",
+        y     = "Daily Trips"
+      ) +
+      theme_bw(base_size = 13)
+  })
+  
+  rain_gg <- reactive({
+    d <- filtered()
+    
+    rain_cols <- c(
+      "None"     = "#d9d9d9",
+      "Light"    = "#bdd7e7",
+      "Moderate" = "#6baed6",
+      "Heavy"    = "#2171b5"
+    )
+    
+    ggplot(d, aes(x = rain_cat, y = n_trips, fill = rain_cat)) +
+      geom_boxplot(outlier.alpha = 0.25, linewidth = 0.7) +
+      scale_fill_manual(values = rain_cols, drop = FALSE, name = "Rain Category") +
+      scale_y_continuous(labels = scales::comma, limits = c(0, input$y_max)) +
+      labs(
+        title = "Daily Trips by Rain Category",
+        x     = "Rain Category",
+        y     = "Daily Trips"
+      ) +
+      theme_bw(base_size = 13) +
+      theme(legend.position = "right")
+  })
+  
+  output$temp_plot <- renderPlotly({
+    ggplotly(temp_gg(), tooltip = c("x", "y", "colour"))
+  })
+  
+  output$rain_plot <- renderPlotly({
+    ggplotly(rain_gg(), tooltip = c("x", "y", "fill"))
+  })
+  
+  output$dl_data <- downloadHandler(
+    filename = function() paste0("daily_weather_filtered_", Sys.Date(), ".csv"),
+    content  = function(file) fwrite(filtered(), file)
+  )
+  
+  output$dl_temp_plot <- downloadHandler(
+    filename = function() paste0("temp_plot_", Sys.Date(), ".png"),
+    content  = function(file) ggsave(file, plot = temp_gg(), width = 9, height = 5.2, dpi = 300)
+  )
+  
+  output$dl_rain_plot <- downloadHandler(
+    filename = function() paste0("rain_plot_", Sys.Date(), ".png"),
+    content  = function(file) ggsave(file, plot = rain_gg(), width = 7.5, height = 5.2, dpi = 300)
+  )
+}
+
+shinyApp(ui, server)
+```
+
 ## 6. Results
 
 ### What the precipitation figure shows
